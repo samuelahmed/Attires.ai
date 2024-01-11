@@ -19,7 +19,7 @@ export default function Home() {
     <div className="backgroundStyle h-screen w-screen flex flex-col">
       {/* header */}
       <header className="w-screen h-14 md:pr-10 space-x-2 flex justify-end items-center">
-        <Menubar 
+        <Menubar
         // className="border-none"
         >
           <MenubarMenu>
@@ -32,6 +32,9 @@ export default function Home() {
             <MenubarTrigger>Account</MenubarTrigger>
             <MenubarContent className="mr-2 md:mr-10">
               <MenubarItem>Settings</MenubarItem>
+              {/* turn off dotted bg */}
+              {/* manage payments */}
+              {/* change acc name / pass / email  */}
               <MenubarSeparator />
               <MenubarItem>Logout</MenubarItem>
             </MenubarContent>
@@ -56,7 +59,7 @@ export default function Home() {
         <div className="">
           <Image
             // src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/demoImg-1-1.png-1704751089449"
-            src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/6116-07086708en_Masterfile.jpg-whiteBackground-1704761098754" 
+            src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/6116-07086708en_Masterfile.jpg-whiteBackground-1704761098754"
             // src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/Screenshot+2024-01-07+at+8.20.54+PM.png-whiteBackground-1704760225488"
             // src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/Screenshot+2024-01-07+at+8.20.54+PM.png-1704760215446"
             alt={"broken"}
