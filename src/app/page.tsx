@@ -46,14 +46,19 @@ export default function Home() {
         <div className="w-4/5 md:w-1/2 flex flex-col space-y-2 ">
           <div className="flex flex-row space-x-2 text-sm items-center pl-1">
             <p>Background</p>
-            <Switch />
+            <Switch aria-label="Toggle Background" 
+             />
             <p>Original Image</p>
-            <Switch />
+
+            <Switch aria-label="Toggle Original Image" 
+            />
           </div>
 
           <div className="flex flex-row space-x-2">
             <Input type="email" placeholder="Tell the AI what to design" />
-            <Button type="submit">Visualize</Button>
+            <Button id="Activate Visualizer AI" type="submit">
+              Visualize
+            </Button>
           </div>
         </div>
         <div className="">
