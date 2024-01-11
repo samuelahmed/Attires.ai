@@ -59,9 +59,11 @@ export default function Home() {
         <div className="">
           <Image
             // src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/demoImg-1-1.png-1704751089449"
-            src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/6116-07086708en_Masterfile.jpg-whiteBackground-1704761098754"
+            // src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/6116-07086708en_Masterfile.jpg-whiteBackground-1704761098754"
             // src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/Screenshot+2024-01-07+at+8.20.54+PM.png-whiteBackground-1704760225488"
             // src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/Screenshot+2024-01-07+at+8.20.54+PM.png-1704760215446"
+            // src="https://outfit-visualizer.s3.us-west-1.amazonaws.com/European-Fashion-Influences-on-Kelseyybarnes.jpg-whiteBackground-1704965026825"
+            src="https://outfit-visualizer.s3.us-west-1.amazonaws.com//tmp/European-Fashion-Influences-on-Kelseyybarnes.png-1704965038321"
             alt={"broken"}
             width={512}
             height={512}
