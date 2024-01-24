@@ -40,15 +40,13 @@ export default function Header() {
           <Menubar>
             <MenubarMenu>
               <MenubarTrigger>Image</MenubarTrigger>
-
-              <MenubarContent className="mr-20 md:mr-32 space-y-1">
+              <MenubarContent className="mr-5 md:mr-8 space-y-1">
                 <MenubarItem onClick={() => router.push("/visualize")}>
                   Visualize
                 </MenubarItem>
                 <MenubarItem onClick={() => router.push("/edit")}>
                   Edit
                 </MenubarItem>
-
                 <Popover>
                   <PopoverTrigger
                     className="border-none items-center w-full"
@@ -64,7 +62,6 @@ export default function Header() {
                   <PopoverContent className="w-80">
                     <form className="flex flex-col space-y-1 items-center">
                       <Input id="picture" type="file" />
-
                       <Button
                         className="w-36 border-2 border-gray-500"
                         type="submit"
@@ -79,7 +76,7 @@ export default function Header() {
             <MenubarMenu></MenubarMenu>
           </Menubar>
 
-    {/* Add from clerk for Auth */}
+          {/* Add from clerk for Auth */}
           {/* <UserButton afterSignOutUrl="/">
             <UserButton.UserProfileLink
               label="Payments"
