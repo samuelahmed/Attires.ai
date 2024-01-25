@@ -18,6 +18,7 @@ import {
 import { useRouter } from "next/navigation";
 import logo from "/public/logo.png";
 import { CreditCard } from "lucide-react";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Header() {
   const router = useRouter();
@@ -75,15 +76,15 @@ export default function Header() {
             </MenubarMenu>
             <MenubarMenu></MenubarMenu>
           </Menubar>
-
-          {/* Add from clerk for Auth */}
-          {/* <UserButton afterSignOutUrl="/">
-            <UserButton.UserProfileLink
-              label="Payments"
-              labelIcon={<CreditCard />}
-              url="/payments"
-            />
-          </UserButton> */}
+          <div className="w-8">
+            <UserButton afterSignOutUrl="/">
+              <UserButton.UserProfileLink
+                label="Payments"
+                labelIcon={<CreditCard />}
+                url="/payments"
+              />
+            </UserButton>
+          </div>
         </div>
       </header>
     </>
