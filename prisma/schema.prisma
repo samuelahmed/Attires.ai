@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// Remove this when possible
+model Test {
+  id  Int    @id @default(autoincrement())
+  url String
+  urlWhiteBg String
+  urlMask String
+  stripeId String?
+  userId String?
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  externalId String   @unique
+  attributes Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+
+// model Image
+
+// model Payment
