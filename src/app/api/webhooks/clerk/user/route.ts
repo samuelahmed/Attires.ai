@@ -36,6 +36,7 @@ async function handler(request: Request) {
   const eventType: EventType = evt.type;
   if (eventType === "user.created") {
     const { id, ...attributes } = evt.data;
+
     await prismadb.user.upsert({
       where: { externalId: id as string },
       create: {

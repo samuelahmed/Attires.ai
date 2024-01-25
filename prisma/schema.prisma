@@ -1,20 +1,21 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 // Remove this when possible
 model Test {
-  id  Int    @id @default(autoincrement())
-  url String
+  id         Int     @id @default(autoincrement())
+  url        String
   urlWhiteBg String
-  urlMask String
-  stripeId String?
-  userId String?
+  urlMask    String
+  stripeId   String?
+  userId     String?
 }
 
 model User {
@@ -23,9 +24,25 @@ model User {
   attributes Json
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  // UserSubscription UserSubscription?
 }
 
+model Subscription {
+  id                     String    @id @default(cuid())
+  // this will come from clerk
+  userId                 String    @unique
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+  // User                   User      @relation(fields: [userId], references: [externalId])
+}
 
-// model Image
-
-// model Payment
+//model image
+// model Image {
+//   id     Int     @id @default(autoincrement())
+//   userId String
+//   url        String
+//   urlWhiteBg String
+//   urlMask    String
+// }
