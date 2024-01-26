@@ -12,7 +12,7 @@ import prismadb from "@/lib/prismadb";
     one seems to have the proper userID, whereas duplicate is unused after its creation.
 */
 
-const webhookSecret = process.env.WEBHOOK_SECRET || "";
+const webhookSecret = process.env.CLERK_USER_WEBHOOK_SECRET || "";
 
 async function handler(request: Request) {
 
