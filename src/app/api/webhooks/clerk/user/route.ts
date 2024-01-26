@@ -5,14 +5,17 @@ import { IncomingHttpHeaders } from "http";
 import prismadb from "@/lib/prismadb";
 
 /*
-    - This hook will create a db entry for User on account creation
-    - Info comes from clerk and is passed to planetscale db
-    - Test locally with ngrok
+    This hook will create a db entry for User on account creation
+    Info comes from clerk and is passed to planetscale db
+    Test locally with ngrok
+    Issue: creates two rows per user - one at creation and a second at first login. The first 
+    one seems to have the proper userID, whereas duplicate is unused after its creation.
 */
 
 const webhookSecret = process.env.WEBHOOK_SECRET || "";
 
 async function handler(request: Request) {
+
   const payload = await request.json();
   const headersList = headers();
   const heads = {
@@ -36,7 +39,6 @@ async function handler(request: Request) {
   const eventType: EventType = evt.type;
   if (eventType === "user.created") {
     const { id, ...attributes } = evt.data;
-
     await prismadb.user.upsert({
       where: { externalId: id as string },
       create: {
@@ -46,7 +48,6 @@ async function handler(request: Request) {
       update: { attributes },
     });
   }
-
   return new NextResponse("success");
 }
 
