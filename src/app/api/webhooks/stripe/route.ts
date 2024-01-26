@@ -1,15 +1,19 @@
 import Stripe from "stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-
 import prismadb from "@/lib/prismadb";
 import { stripe } from "@/lib/stripe";
 
+/*
+  This webhook is triggered when stripe events occur and updates the 'subscription' table in db
+  When checkout session is complete it will create a subscription item in db
+  When payment is successful it will update that item with new end period (is this during end of month?)
+*/
+
 export async function POST(req: Request) {
+  
   const body = await req.text();
-
   const signature = headers().get("Stripe-Signature") as string;
-
   let event: Stripe.Event;
 
   try {
@@ -28,13 +32,9 @@ export async function POST(req: Request) {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
-
-    // console.log("IN checkout.session.completed ")
-
     if (!session?.metadata?.userId) {
-      return new NextResponse("Uesr id is required", { status: 400 });
+      return new NextResponse("User id is required", { status: 400 });
     }
-
     await prismadb.subscription.create({
       data: {
         userId: session?.metadata?.userId,
@@ -52,10 +52,6 @@ export async function POST(req: Request) {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
-
-    // console.log("IN invoice.payment_succeeded ")
-
-
     await prismadb.subscription.update({
       where: {
         stripeSubscriptionId: subscription.id,
