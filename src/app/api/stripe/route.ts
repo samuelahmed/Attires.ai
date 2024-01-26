@@ -6,12 +6,19 @@ import { absoluteUrl } from "@/lib/utils";
 
 const paymentsUrl = absoluteUrl("/payments");
 
+/*
+  This route will create a checkout session or open billing portal with stripe
+  It first checks to see if there is a authorized user using clerk
+  Second it checks if that user has a subscription using userId
+    If they do - it opens the billing portal
+    If they do not - it opens the checkout sewssion with the defined product
+  Finally it returns the user to paymentsUrl when complete
+*/
+
 export async function GET() {
   try {
     const { userId } = auth();
     const user = await currentUser();
-
-    console.log(user)
 
     if (!userId || !user) {
       return new NextResponse("Unauthorized", { status: 401 });

@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       session.subscription as string
     );
 
-    console.log("IN checkout.session.completed ")
+    // console.log("IN checkout.session.completed ")
 
     if (!session?.metadata?.userId) {
       return new NextResponse("Uesr id is required", { status: 400 });
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
       session.subscription as string
     );
 
-    console.log("IN invoice.payment_succeeded ")
+    // console.log("IN invoice.payment_succeeded ")
 
 
     await prismadb.subscription.update({
