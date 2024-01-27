@@ -73,21 +73,13 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get("file");
-    if (!file) {
+    if (!file || !(file instanceof File)) {
       return NextResponse.error();
     }
 
-    //check the TS here.
-    const buffer = Buffer.from(
-      await (file instanceof Blob
-        ? await file.arrayBuffer()
-        : await new Blob([file]).arrayBuffer())
-    );  
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-    const s3URL = await uploadFileToS3(
-      buffer,
-      file instanceof File ? file.name : ""
-    );
+    const s3URL = await uploadFileToS3(buffer, file.name);
 
     const newEntry = await prismadb.image.create({
       data: {
@@ -108,4 +100,5 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'An unknown error occurred' });
     }
   }
+
 }
