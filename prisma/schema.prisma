@@ -35,15 +35,10 @@ model Subscription {
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 }
 
-//model image
-// model Image {
-//   id     Int     @id @default(autoincrement())
-//   userId String
-//     type string
-// createdAt  DateTime @default(now())
-// url string
-// }
-
-// isCurrentImg
-// 
-
+model Image {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  userId    String
+  type      String
+  url       String
+}
