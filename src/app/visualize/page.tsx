@@ -4,8 +4,29 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import Header from "@/components/header";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function Visualize() {
+
+/* 
+  Get most recent image that has been uploaded by current user
+*/
+  const [mostRecentImage, setMostRecentImage] = useState("");
+  const getMostRecentImage = async () => {
+    const response = await fetch("/api/images/mostRecentImage", {
+      cache: "no-store",
+    });
+    const data = await response.json();
+    setMostRecentImage(data.url);
+  };
+  useEffect(() => {
+    getMostRecentImage();
+  }, []);
+
+  
+
+
   return (
     <div className="backgroundStyle h-screen w-screen flex flex-col">
       <Header />
@@ -43,7 +64,9 @@ export default function Visualize() {
             </Button>
           </div>
         </div>
-        <div className="h-[512px] bg-white">{/* add image in here */}</div>
+        <div className="h-[512px] bg-white">
+          <Image width={512} height={512} alt="" src={mostRecentImage} />
+        </div>
       </main>
     </div>
   );

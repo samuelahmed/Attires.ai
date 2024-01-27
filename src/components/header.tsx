@@ -44,7 +44,12 @@ export default function Header() {
         method: "POST",
         body: formData,
       });
-      setUploading(false);
+      if (response.ok) {
+        // Make it so only the image is reloaded?
+        window.location.reload();
+      } else {
+        setUploading(false);
+      }
     } catch (error) {
       console.error(error);
       setUploading(false);

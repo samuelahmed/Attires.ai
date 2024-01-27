@@ -79,9 +79,7 @@ export async function POST(request: Request) {
       return new NextResponse("MEOW");
     }
 
-    console.log('File:', file);
     const buffer = Buffer.from(await file.arrayBuffer());
-    console.log('Buffer:', buffer);
 
 
     const s3URL = await uploadFileToS3(buffer, file.name);
