@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { PrismaClient } from "@prisma/client";
+import prismadb from "@/lib/prismadb";
 import Jimp from "jimp";
+import { auth, currentUser } from "@clerk/nextjs";
 
 export const maxDuration = 100;
 
@@ -62,6 +63,13 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
 }
 
 export async function POST(request: Request) {
+  const { userId } = auth();
+  const user = await currentUser();
+
+  if (!userId || !user) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
   try {
     const formData = await request.formData();
     const file = formData.get("file");
@@ -80,12 +88,13 @@ export async function POST(request: Request) {
       file instanceof File ? file.name : ""
     );
 
-    // const newEntry = await prisma.test.create({
-    //     data: {
-    //         url: s3URL,
-    //         userId: userId,
-    //     },
-    // });
+    const newEntry = await prismadb.image.create({
+      data: {
+        userId: userId,
+        type: "Upload", 
+        url: s3URL,
+      },
+    });
 
     return NextResponse.json({
       s3URL,
@@ -93,7 +102,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     return NextResponse.json({
-      //   error: error.message,
     });
   }
 }
