@@ -73,13 +73,16 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get("file");
+
     if (!file || !(file instanceof File)) {
-      return NextResponse.error();
+      return new NextResponse("MEOW");
     }
 
     console.log('File:', file);
     const buffer = Buffer.from(await file.arrayBuffer());
     console.log('Buffer:', buffer);
+
+
     const s3URL = await uploadFileToS3(buffer, file.name);
 
     const newEntry = await prismadb.image.create({
