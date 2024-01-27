@@ -1,13 +1,17 @@
+// @ts-nocheck
+
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import prismadb from "@/lib/prismadb";
+import { PrismaClient } from "@prisma/client";
+// import PipelineSingleton from "./pipeline.js";
 import Jimp from "jimp";
 import { auth, currentUser } from "@clerk/nextjs";
+import prismadb from "@/lib/prismadb";
+
 
 export const maxDuration = 100;
 
 // const prisma = new PrismaClient();
-
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
   credentials: {
@@ -16,16 +20,17 @@ const s3Client = new S3Client({
   },
 });
 
-async function uploadFileToS3(file: Buffer, fileName: string) {
+async function uploadFileToS3(file, fileName) {
   // Convert image to PNG
   let image = await Jimp.read(file);
+
   if (image.getMIME() !== Jimp.MIME_PNG) {
-    fileName = "/tmp/" + fileName.replace(/\.[^/.]+$/, "") + ".png";
+    fileName = '/tmp/' + fileName.replace(/\.[^/.]+$/, "") + ".png";
     image = await image.writeAsync(fileName);
   }
 
   // Resize image if it's larger than 4 MB
-  const maxSize = 4 * 1024 * 1024;
+  const maxSize = 4 * 1024 * 1024; // 4 MB in bytes
   if (image.bitmap.data.length > maxSize) {
     const scaleFactor = Math.sqrt(maxSize / image.bitmap.data.length);
     const width = Math.floor(image.bitmap.width * scaleFactor);
@@ -62,47 +67,44 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
   return s3URL;
 }
 
-export async function POST(request: Request) {
-  const { userId } = auth();
-  const user = await currentUser();
 
-  if (!userId || !user) {
-    return new NextResponse("Unauthorized", { status: 401 });
-  }
+export async function POST(request) {
+
+    const { userId } = auth();
+    const user = await currentUser();
+  
+    if (!userId || !user) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
   try {
     const formData = await request.formData();
     const file = formData.get("file");
-
-    if (!file || !(file instanceof File)) {
-      return new NextResponse("MEOW");
+    if (!file) {
+      return NextResponse.error(new Error("No file uploaded"));
     }
 
-    console.log('File:', file);
     const buffer = Buffer.from(await file.arrayBuffer());
-    console.log('Buffer:', buffer);
-
-
     const s3URL = await uploadFileToS3(buffer, file.name);
 
     const newEntry = await prismadb.image.create({
-      data: {
-        userId: userId,
-        type: "Upload",
-        url: s3URL,
-      },
-    });
+        data: {
+          userId: userId,
+          type: "Upload",
+          url: s3URL,
+        },
+      });
+
 
     return NextResponse.json({
-      s3URL,
+    //   s3URLWhiteBG,
+    //   s3URL,
+    //   newEntry,
       success: true,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message });
-    } else {
-      return NextResponse.json({ error: 'An unknown error occurred' });
-    }
+    return NextResponse.json({
+      error: error.message,
+    });
   }
-
 }
