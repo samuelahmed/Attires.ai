@@ -77,8 +77,9 @@ export async function POST(request: Request) {
       return NextResponse.error();
     }
 
+    console.log('File:', file);
     const buffer = Buffer.from(await file.arrayBuffer());
-
+    console.log('Buffer:', buffer);
     const s3URL = await uploadFileToS3(buffer, file.name);
 
     const newEntry = await prismadb.image.create({
