@@ -56,6 +56,29 @@ export default function Header() {
     }
   };
 
+  const createMaskImg = async ({ e }: any) => {
+    // e.preventDefault();
+    // if (!file) return;
+    // setUploading(true);
+    // const formData = new FormData();
+    // formData.append("file", file);
+    try {
+      const response = await fetch("/api/images/uploadMaskToS3", {
+        method: "POST",
+        // body: formData,
+      });
+      if (response.ok) {
+        // Make it so only the image is reloaded?
+        // window.location.reload();
+      } else {
+        // setUploading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      // setUploading(false);
+    }
+  };
+
   return (
     <>
       <header className="w-screen h-14 px-2 py-2 md:px-10 space-x-2 flex flex-row items-center justify-between">
@@ -81,6 +104,14 @@ export default function Header() {
                 <MenubarItem onClick={() => router.push("/edit")}>
                   Edit
                 </MenubarItem>
+
+               {/* REMOVE THIS WHEN DONE TESTING */}
+                <MenubarItem onClick={createMaskImg}>
+                  UploadMaskToS3
+                </MenubarItem>
+
+
+                
                 <Popover>
                   <PopoverTrigger
                     className="border-none items-center w-full"

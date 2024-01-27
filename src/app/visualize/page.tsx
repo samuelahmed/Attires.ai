@@ -8,8 +8,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Visualize() {
-
-/* 
+  /* 
   Get most recent image that has been uploaded by current user
 */
   const [mostRecentImage, setMostRecentImage] = useState("");
@@ -23,9 +22,6 @@ export default function Visualize() {
   useEffect(() => {
     getMostRecentImage();
   }, []);
-
-  
-
 
   return (
     <div className="backgroundStyle h-screen w-screen flex flex-col">
