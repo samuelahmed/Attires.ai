@@ -22,8 +22,8 @@ import { UserButton } from "@clerk/nextjs";
 import { useState } from "react";
 
 export default function Header() {
-  const router = useRouter();
 
+  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -33,6 +33,10 @@ export default function Header() {
     }
   };
 
+  /*
+    Take the image the user upload and pass it to backend API to be resized and upload to s3
+    The s3 URL is then returned and a mask-image and white-background-mask-image are created
+  */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) return;
@@ -45,8 +49,8 @@ export default function Header() {
         body: formData,
       });
       if (response.ok) {
-        // Make it so only the image is reloaded?
-        window.location.reload();
+        const data = await response.json();
+        createMaskImg(data.s3URL);
       } else {
         setUploading(false);
       }
@@ -56,26 +60,25 @@ export default function Header() {
     }
   };
 
-  const createMaskImg = async ({ e }: any) => {
-    // e.preventDefault();
-    // if (!file) return;
-    // setUploading(true);
-    // const formData = new FormData();
-    // formData.append("file", file);
+  /*
+    Take the URL from standard image and pass it to API that creates a mask
+  */
+  const createMaskImg = async (imgUrl: string) => {
     try {
       const response = await fetch("/api/images/uploadMaskToS3", {
         method: "POST",
-        // body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imgUrl }),
       });
-      if (response.ok) {
-        // Make it so only the image is reloaded?
-        // window.location.reload();
-      } else {
-        // setUploading(false);
+      if (!response.ok) {
+        console.error("Response:", response);
+        const responseBody = await response.text();
+        console.error("Response body:", responseBody);
       }
     } catch (error) {
       console.error(error);
-      // setUploading(false);
     }
   };
 
@@ -104,14 +107,6 @@ export default function Header() {
                 <MenubarItem onClick={() => router.push("/edit")}>
                   Edit
                 </MenubarItem>
-
-               {/* REMOVE THIS WHEN DONE TESTING */}
-                <MenubarItem onClick={createMaskImg}>
-                  UploadMaskToS3
-                </MenubarItem>
-
-
-                
                 <Popover>
                   <PopoverTrigger
                     className="border-none items-center w-full"
