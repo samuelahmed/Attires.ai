@@ -27,6 +27,24 @@ async function maskImage(imgUrl: string) {
   const output = await segmenter(url);
   let image = await Jimp.read(url);
 
+  /*
+    It is important to set the mask on a white image or else the borders (if there is size diff)
+    will be transparent and the AI will attempt to fill those areas. 
+  */
+  let whiteImage = new Jimp(1024, 1024, Jimp.rgbaToInt(255, 255, 255, 255));
+  // Resize image to fit within 1024x1024
+  const scaleFactor = 1024 / Math.max(image.bitmap.width, image.bitmap.height);
+  let width = Math.floor(image.bitmap.width * scaleFactor);
+  let height = Math.floor(image.bitmap.height * scaleFactor);
+  image = image.resize(width, height);
+
+  // Calculate the position to center the image
+  let x = (1024 - width) / 2;
+  let y = (1024 - height) / 2;
+
+  // Composite the original image onto the white image
+  whiteImage = whiteImage.composite(image, x, y);
+
   interface Segment {
     label: string;
     mask: {
@@ -52,13 +70,13 @@ async function maskImage(imgUrl: string) {
     for (let y = 0; y < mask.height; y++) {
       for (let x = 0; x < mask.width; x++) {
         if (mask.data[y * mask.width + x]) {
-          image.setPixelColor(Jimp.rgbaToInt(0, 0, 0, 0), x, y);
+          whiteImage.setPixelColor(Jimp.rgbaToInt(0, 0, 0, 0), x, y);
         }
       }
     }
   }
 
-  const processedImageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+  const processedImageBuffer = await whiteImage.getBufferAsync(Jimp.MIME_PNG);
   const maskKey = `${fileName}-mask-${Date.now()}`;
   const maskParams = {
     Bucket: process.env.AWS_BUCKET_NAME,

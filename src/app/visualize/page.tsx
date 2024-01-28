@@ -13,7 +13,7 @@ export default function Visualize() {
   const [maskImage, setMaskImage] = useState("");
 
   const [clientContent, setClientContent] = useState("describe outfit");
-  const [dalleResult, setDalleResult] = useState("");
+  const [dalleResult, setDalleResult] = useState();
   const [whiteImgBg, setWhiteImgBg] = useState(false);
 
   const toggleImgBg = () => {
@@ -23,7 +23,7 @@ export default function Visualize() {
     getMostRecentImage();
     getMostRecentWhitebgImage();
     getMostRecentMaskImage();
-  }, [setDalleResult, dalleResult ]);
+  }, [setDalleResult, dalleResult]);
 
   /* 
   Get most recent image that has been uploaded by current user
@@ -57,7 +57,7 @@ export default function Visualize() {
     setMaskImage(data.url);
   };
 
-  /* 
+/* 
   Trigger dalle with current image.
 */
   const callDalle = async () => {
@@ -142,6 +142,11 @@ export default function Visualize() {
             </Button>
           </div>
         </div>
+
+
+
+
+        {/* Make sure only ONE Image at a time */}
         <div className="h-[512px] bg-white">
           {!whiteImgBg && (
             <Image width={512} height={512} alt="" src={imageUrl} />
@@ -149,7 +154,10 @@ export default function Visualize() {
           {whiteImgBg && (
             <Image width={512} height={512} alt="" src={whiteImageUrl} />
           )}
-          <Image width={512} height={512} alt="" src={dalleResult.image.data[0].url} />
+
+
+          
+          <Image width={512} height={512} alt="" src={dalleResult?.image?.data[0].url} />
         </div>
       </main>
     </div>
