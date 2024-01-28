@@ -8,16 +8,17 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Visualize() {
+  const [imageUrl, setImageUrl] = useState("");
+
   /* 
   Get most recent image that has been uploaded by current user
 */
-  const [mostRecentImage, setMostRecentImage] = useState("");
   const getMostRecentImage = async () => {
     const response = await fetch("/api/images/mostRecentImage", {
       cache: "no-store",
     });
     const data = await response.json();
-    setMostRecentImage(data.url);
+    setImageUrl(data.url);
   };
   useEffect(() => {
     getMostRecentImage();
@@ -61,7 +62,7 @@ export default function Visualize() {
           </div>
         </div>
         <div className="h-[512px] bg-white">
-          <Image width={512} height={512} alt="" src={mostRecentImage} />
+          <Image width={512} height={512} alt="" src={imageUrl} />
         </div>
       </main>
     </div>

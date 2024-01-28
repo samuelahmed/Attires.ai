@@ -22,6 +22,10 @@ export async function GET() {
   */
   try {
     const newestEntry = await prismadb.image.findFirst({
+      where: {
+        type: "Upload",
+        userId: userId
+      },
       orderBy: {
         id: "desc",
       },
