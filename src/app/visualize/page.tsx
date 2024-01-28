@@ -57,12 +57,12 @@ export default function Visualize() {
     setMaskImage(data.url);
   };
 
-/* 
+  /* 
   Trigger dalle with current image.
 */
   const callDalle = async () => {
     // setIsLoading(true);
-    console.log('calling dalle')
+    console.log("calling dalle");
     try {
       const response = await fetch("/api/dalle", {
         method: "POST",
@@ -76,32 +76,12 @@ export default function Visualize() {
       });
       const data = await response.json();
       setDalleResult(data);
-
-      // Send dalle result to create a white backgorund....
-
-      // if (data.image && data.image.data[0] && data.image.data[0].url) {
-      //   const url = data.image.data[0].url;
-      // Now that we have the URL, we can make another POST request
-      // Need to create this route
-      // const response2 = await fetch("/api/dalleImgEditWhiteBG", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ url }), // Pass the URL in the body
-      // });
-
-      // const data2 = await response2.json();
-      // setDalleResult(data2);
-      // console.log("DALLE RESULT 2", dalleResult);
-      // Do something with data2...
-      // }
     } catch (error) {
-      // setDalleResult({ error: error.message });
     } finally {
-      // setIsLoading(false);
     }
   };
+
+  
 
   return (
     <div className="backgroundStyle h-screen w-screen flex flex-col">
@@ -143,9 +123,6 @@ export default function Visualize() {
           </div>
         </div>
 
-
-
-
         {/* Make sure only ONE Image at a time */}
         <div className="h-[512px] bg-white">
           {!whiteImgBg && (
@@ -155,9 +132,12 @@ export default function Visualize() {
             <Image width={512} height={512} alt="" src={whiteImageUrl} />
           )}
 
-
-          
-          <Image width={512} height={512} alt="" src={dalleResult?.image?.data[0].url} />
+          <Image
+            width={512}
+            height={512}
+            alt=""
+            src={dalleResult?.image?.data[0].url}
+          />
         </div>
       </main>
     </div>

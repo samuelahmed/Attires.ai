@@ -51,6 +51,7 @@ export default function Header() {
         const data = await response.json();
         createMaskImg(data.s3URL);
         createWhiteBgImg(data.s3URL);
+        createWhiteBgMaskImg(data.s3URL);
       } else {
         setUploading(false);
       }
@@ -88,6 +89,28 @@ export default function Header() {
   const createWhiteBgImg = async (imgUrl: string) => {
     try {
       const response = await fetch("/api/images/uploadWhiteBgToS3", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imgUrl }),
+      });
+      if (!response.ok) {
+        console.error("Response:", response);
+        const responseBody = await response.text();
+        console.error("Response body:", responseBody);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /*
+    Take the URL from standard image and pass it to API that creates a white-bg-mask-img
+  */
+  const createWhiteBgMaskImg = async (imgUrl: string) => {
+    try {
+      const response = await fetch("/api/images/uploadWhiteBgMaskToS3", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
