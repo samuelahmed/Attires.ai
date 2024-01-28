@@ -22,7 +22,6 @@ import { UserButton } from "@clerk/nextjs";
 import { useState } from "react";
 
 export default function Header() {
-
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -51,6 +50,7 @@ export default function Header() {
       if (response.ok) {
         const data = await response.json();
         createMaskImg(data.s3URL);
+        createWhiteBgImg(data.s3URL);
       } else {
         setUploading(false);
       }
@@ -66,6 +66,28 @@ export default function Header() {
   const createMaskImg = async (imgUrl: string) => {
     try {
       const response = await fetch("/api/images/uploadMaskToS3", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imgUrl }),
+      });
+      if (!response.ok) {
+        console.error("Response:", response);
+        const responseBody = await response.text();
+        console.error("Response body:", responseBody);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /*
+    Take the URL from standard image and pass it to API that creates a white-bg-img
+  */
+  const createWhiteBgImg = async (imgUrl: string) => {
+    try {
+      const response = await fetch("/api/images/uploadWhiteBgToS3", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
