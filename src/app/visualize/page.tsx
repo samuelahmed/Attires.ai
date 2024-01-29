@@ -183,6 +183,7 @@ export default function Visualize() {
             width={512}
             height={512}
             alt=""
+            // @ts-ignore
             src={dalleResult?.image?.data[0].url}
           />
           {/* <Image
