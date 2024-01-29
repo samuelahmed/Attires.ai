@@ -15,11 +15,8 @@ export default function Visualize() {
   const [clientContent, setClientContent] = useState("describe outfit");
   const [dalleResult, setDalleResult] = useState();
   const [whiteImgBg, setWhiteImgBg] = useState(false);
-
   const [whiteBgMaskImg, setWhiteBgMaskImg] = useState("");
-
   const [stabilityData, setStabilityData] = useState({ image: "" });
-
 
   const toggleImgBg = () => {
     setWhiteImgBg(!whiteImgBg);
@@ -63,20 +60,16 @@ export default function Visualize() {
     setMaskImage(data.url);
   };
 
-    /* 
+  /* 
   Get most recent whiteBgImg that has been uploaded by current user
 */
-const getMostRecentWhiteBgMaskImage = async () => {
-  const response = await fetch("/api/images/mostRecentWhiteBgMaskImage", {
-    cache: "no-store",
-  });
-  const data = await response.json();
-  setWhiteBgMaskImg(data.url);
-};
-
-
-
-
+  const getMostRecentWhiteBgMaskImage = async () => {
+    const response = await fetch("/api/images/mostRecentWhiteBgMaskImage", {
+      cache: "no-store",
+    });
+    const data = await response.json();
+    setWhiteBgMaskImg(data.url);
+  };
 
   /* 
   Trigger dalle with current image.
@@ -105,32 +98,26 @@ const getMostRecentWhiteBgMaskImage = async () => {
   Trigger Stability with current image.
 */
   const callStability = async () => {
-    console.log('calling stability')
+    console.log("calling stability");
     // setIsLoading(true);
     try {
-      // console.log(bgImg, "BGIMG");
-      // const encodedUrl = encodeURIComponent(bgImg);
       const stabilityResponse = await fetch("/api/stability", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          input: clientContent,
+          // input: clientContent, // need to set male or femala to focus the random
           url: whiteBgMaskImg,
         }), // Pass the URL from the previous response
       });
       console.log("Header");
       const stabilityData = await stabilityResponse.json();
-      // console.log(stabilityData, "Stability Data");
-      setStabilityData(stabilityData); // Update the state with the new data
+      setStabilityData(stabilityData);
     } catch (error) {
-      // setDalleResult({ error: error.message });
     } finally {
-      // setIsLoading(false);
     }
   };
-
 
   return (
     <div className="backgroundStyle h-screen w-screen flex flex-col">
@@ -198,14 +185,13 @@ const getMostRecentWhiteBgMaskImage = async () => {
             alt=""
             src={dalleResult?.image?.data[0].url}
           />
-                    {/* <Image
+          {/* <Image
             width={512}
             height={512}
             alt=""
             src={stabilityData?.image?.data[0].url}
           /> */}
-                    <img src={stabilityData.image} alt="Generated Image" />
-
+          <img src={stabilityData.image} alt="Generated Image" />
         </div>
       </main>
     </div>
