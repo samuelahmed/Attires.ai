@@ -31,18 +31,18 @@ export async function POST(req: any) {
   formData.append("mask_source", "INIT_IMAGE_ALPHA");
 
   //FEMALE
-  // formData.append(
-  //   "text_prompts[0][text]",
-  //   "Casual Wear: T-shirts, Jeans, Hoodies, Sneakers, Formal Wear: Suits, Dress Shirts, Ties, Dress Shoes, Athleisure: Activewear, Yoga Pants, Sports Bras, Running Shoes, Bohemian Style: Flowy Dresses, Fringe Accessories, Maxi Skirts, Sandals, Streetwear: Graphic Tees, Hoodies, Baseball Caps, Sneakers, Vintage Fashion: Retro Dresses, High-Waisted Pants, Vintage Blouses, Classic Accessories, Chic and Elegant: Shift Dresses, Blouses with Bow Ties, Pencil Skirts, Heels, Preppy Style: Polo Shirts, Khaki Pants, Sweaters tied around the shoulders, Loafers, Edgy Fashion: Leather Jackets, Distressed Jeans, Combat Boots, Dark Accessories, Business Casual: Chinos, Button-down Shirts, Loafers or Oxfords, Blazers, Gothic Style: Black Clothing, Fishnet Stockings, Dark Makeup, Platform Boots, Romantic Style: Lace Dresses, Floral Prints, Soft Fabrics, Ballet Flats, Eclectic Fashion: Mix and match various styles, Bold Patterns, Statement Accessories, Minimalist Fashion: Neutral Colors, Simple Silhouettes, Clean Lines, Basic Wardrobe Staples, Cultural and Ethnic Wear: Traditional Dresses, Ethnic Prints, Cultural Accessories, Handcrafted Items."
-  // );
-  // formData.append("text_prompts[0][weight]", "1");
+  formData.append(
+    "text_prompts[0][text]",
+    "Casual Wear: T-shirts, Jeans, Hoodies, Sneakers, Formal Wear: Suits, Dress Shirts, Ties, Dress Shoes, Athleisure: Activewear, Yoga Pants, Sports Bras, Running Shoes, Bohemian Style: Flowy Dresses, Fringe Accessories, Maxi Skirts, Sandals, Streetwear: Graphic Tees, Hoodies, Baseball Caps, Sneakers, Vintage Fashion: Retro Dresses, High-Waisted Pants, Vintage Blouses, Classic Accessories, Chic and Elegant: Shift Dresses, Blouses with Bow Ties, Pencil Skirts, Heels, Preppy Style: Polo Shirts, Khaki Pants, Sweaters tied around the shoulders, Loafers, Edgy Fashion: Leather Jackets, Distressed Jeans, Combat Boots, Dark Accessories, Business Casual: Chinos, Button-down Shirts, Loafers or Oxfords, Blazers, Gothic Style: Black Clothing, Fishnet Stockings, Dark Makeup, Platform Boots, Romantic Style: Lace Dresses, Floral Prints, Soft Fabrics, Ballet Flats, Eclectic Fashion: Mix and match various styles, Bold Patterns, Statement Accessories, Minimalist Fashion: Neutral Colors, Simple Silhouettes, Clean Lines, Basic Wardrobe Staples, Cultural and Ethnic Wear: Traditional Dresses, Ethnic Prints, Cultural Accessories, Handcrafted Items."
+  );
+  formData.append("text_prompts[0][weight]", "1");
 
   //MALE
   formData.append(
-    "text_prompts[0][text]",
+    "text_prompts[1][text]",
     "T-shirt or casual shirt, Jeans or chinos, Sneakers or casual shoes, Optional: Hoodie or denim jacket. Button-down shirt (long or short sleeve), Khakis or dress pants, Leather belt, Loafers or dress shoes, Optional: Blazer or sweater. Dress shirt, Dress pants, Tie or bowtie, Dress shoes, Suit jacket or blazer. Polo shirt or dress shirt, Chinos or tailored trousers, Loafers or desert boots, Optional: V-neck sweater or blazer. Dress shirt, Dress suit (matching jacket and pants), Silk tie, Dress shoes, Optional: Pocket square. Tuxedo or black suit, Dress shirt, Bowtie or silk tie, Dress shoes, Optional: Cummerbund or vest. Short-sleeve shirt or polo, Shorts or lightweight chinos, Boat shoes or canvas sneakers, Sunglasses and a hat. Athletic T-shirt or tank top, Joggers or athletic shorts, Sneakers or running shoes, Baseball cap or sports hat. Button-down shirt, Dark jeans or chinos, Dress shoes or stylish sneakers, Leather jacket or blazer. Moisture-wicking shirt, Cargo pants or outdoor shorts, Hiking boots or trail shoes, Hat and sunglasses."
   );
-  formData.append("text_prompts[0][weight]", "1");
+  formData.append("text_prompts[1][weight]", "1");
 
   formData.append("cfg_scale", "7");
   formData.append("samples", 1);
