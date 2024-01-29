@@ -6,9 +6,9 @@ import { Switch } from "@/components/ui/switch";
 import Header from "@/components/header";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { Loader } from "lucide-react";
 
 export default function Visualize() {
-  
   const [imageUrl, setImageUrl] = useState("");
   const [maskImage, setMaskImage] = useState("");
   const [clientContent, setClientContent] = useState("describe outfit");
@@ -167,7 +167,15 @@ export default function Visualize() {
             </Button>
           </div>
         </div>
-        <div className="h-[512px] bg-white">
+        <div className="h-[512px] bg-white flex justify-center items-center">
+          {((seeOriginal === true && !imageUrl) ||
+            (seeOriginal === false && !currentImage && isLoading === true)) && (
+            <Loader
+            className="h-2/3 w-2/3 animate-spin-slow"
+            strokeWidth={0.5}
+             />
+          )}
+
           {seeOriginal === true && imageUrl && (
             <Image
               priority
