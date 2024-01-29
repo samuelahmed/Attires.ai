@@ -82,7 +82,7 @@ async function maskImage(imgUrl: string) {
   for (let y = 0; y < backgroundMask.height; y++) {
     for (let x = 0; x < backgroundMask.width; x++) {
       if (backgroundMask.data[y * backgroundMask.width + x]) {
-        whiteImage.setPixelColor(Jimp.rgbaToInt(0, 0, 0, 0), x, y);
+        whiteImage.setPixelColor(Jimp.rgbaToInt(255, 255, 255, 255), x, y);
       }
     }
   }
