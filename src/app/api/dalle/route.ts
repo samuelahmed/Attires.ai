@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   formData.append("image", blob, "image.png");
 
   const result = await openai.images.edit({
-    image: formData.get("image"),
+    image: (formData as any).get("image"),
     prompt: input,
   });
 
