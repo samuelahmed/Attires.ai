@@ -35,9 +35,9 @@ export default function Visualize() {
 
   useEffect(() => {
     // @ts-ignore
-    if (dalleResult?.image?.data[0].url) {
+    if (dalleResult?.image) {
       // @ts-ignore
-      setCurrentImage(dalleResult?.image?.data[0].url);
+      setCurrentImage(dalleResult.image);
     }
   }, [dalleResult]);
 
@@ -81,6 +81,17 @@ export default function Visualize() {
       });
       const data = await response.json();
       setDalleResult(data);
+
+      // Call the /api/dallePrisma route with the s3URL
+      const prismaResponse = await fetch("/api/dallePrisma", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          file: data,
+        }),
+      });
     } catch (error) {
     } finally {
       setIsLoading(false);
