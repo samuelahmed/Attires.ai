@@ -236,6 +236,7 @@ Get most recent MaskImg that has been uploaded by current user
     if (node && node.parentNode) {
       node.parentNode.removeChild(node);
     }
+    // why is this causing issues sometimes?
     let canvasSize;
     if (window.innerWidth > 768) {
       canvasSize = 512;

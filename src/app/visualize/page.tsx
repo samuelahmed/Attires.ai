@@ -13,7 +13,6 @@ export default function Visualize() {
   const [maskImage, setMaskImage] = useState("");
   const [clientContent, setClientContent] = useState("describe outfit");
   const [dalleResult, setDalleResult] = useState();
-  // const [whiteBgMaskImg, setWhiteBgMaskImg] = useState("");
   const [stabilityData, setStabilityData] = useState({ image: "" });
   const [seeOriginal, setSeeOriginal] = useState(true);
   const [currentImage, setCurrentImage] = useState("");
@@ -26,7 +25,6 @@ export default function Visualize() {
   useEffect(() => {
     getMostRecentImage();
     getMostRecentMaskImage();
-    // getMostRecentWhiteBgMaskImage();
   }, []);
 
   useEffect(() => {
@@ -64,17 +62,6 @@ export default function Visualize() {
     const data = await response.json();
     setMaskImage(data.url);
   };
-
-  /* 
-  Get most recent whiteBgMaskImg that has been uploaded by current user
-*/
-  // const getMostRecentWhiteBgMaskImage = async () => {
-  //   const response = await fetch("/api/images/mostRecentWhiteBgMaskImage", {
-  //     cache: "no-store",
-  //   });
-  //   const data = await response.json();
-  //   setWhiteBgMaskImg(data.url);
-  // };
 
   /* 
   Trigger dalle with current image.
