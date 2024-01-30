@@ -20,7 +20,7 @@ export default function Payments() {
       <main className="flex flex-col flex-grow items-center space-y-10 mt-10">
         <div className="w-4/5 md:w-1/2 flex flex-col space-y-2">
           {/* add loading state to this button */}
-          <Button onClick={onSubscribe}>Payments Dashboard</Button>
+          <Button onClick={onSubscribe}>Subscription Dashboard</Button>
           <div>Free Images: 7 / 10</div>
           <div>Monthly Images: 90 / 100</div>
         </div>

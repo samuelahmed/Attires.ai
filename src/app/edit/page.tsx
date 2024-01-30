@@ -56,7 +56,10 @@ Get most recent MaskImg that has been uploaded by current user
         method: "POST",
         body: formData,
       });
-      setUploading(false);
+
+      if (response.ok) {
+        location.reload();
+      }
     } catch (error) {
       console.error(error);
       setUploading(false);
@@ -122,14 +125,10 @@ Get most recent MaskImg that has been uploaded by current user
     return can;
   };
 
-
-
   // Function to draw image on canvas
   const drawImageOnCanvas = (ctx, img, x, y, width, height, can) => {
     ctx.drawImage(img, x, y, width, height, 0, 0, can.width, can.height);
   };
-  
-
 
   // Function to return original image
   const returnOriginal = (event, ctx, originalCtx, getPos) => {

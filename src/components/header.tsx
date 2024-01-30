@@ -191,9 +191,9 @@ export default function Header() {
           <div className="w-8">
             <UserButton afterSignOutUrl="/">
               <UserButton.UserProfileLink
-                label="Payments"
+                label="Subscription"
                 labelIcon={<CreditCard />}
-                url="/payments"
+                url="/subscription"
               />
             </UserButton>
           </div>
