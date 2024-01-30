@@ -49,9 +49,10 @@ export default function Header() {
       });
       if (response.ok) {
         const data = await response.json();
-        createMaskImg(data.s3URL);
-        createWhiteBgImg(data.s3URL);
-        createWhiteBgMaskImg(data.s3URL);
+        await createMaskImg(data.s3URL);
+        await createWhiteBgImg(data.s3URL);
+        await createWhiteBgMaskImg(data.s3URL);
+        location.reload(); 
       } else {
         setUploading(false);
       }
