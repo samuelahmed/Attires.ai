@@ -35,7 +35,7 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
   let height = Math.floor(image.bitmap.height * scaleFactor);
   image = image.resize(width, height);
   // Create a new 1024x1024 white image
-  let transparentImage = new Jimp(1024, 1024, Jimp.rgbaToInt(0, 0, 0, 0));
+  let transparentImage = new Jimp(1024, 1024, Jimp.rgbaToInt(255, 255, 255, 255));
   // Calculate the position to center the image
   let x = (1024 - width) / 2;
   let y = (1024 - height) / 2;

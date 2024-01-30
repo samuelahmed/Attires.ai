@@ -13,7 +13,7 @@ export default function Visualize() {
   const [maskImage, setMaskImage] = useState("");
   const [clientContent, setClientContent] = useState("describe outfit");
   const [dalleResult, setDalleResult] = useState();
-  const [whiteBgMaskImg, setWhiteBgMaskImg] = useState("");
+  // const [whiteBgMaskImg, setWhiteBgMaskImg] = useState("");
   const [stabilityData, setStabilityData] = useState({ image: "" });
   const [seeOriginal, setSeeOriginal] = useState(true);
   const [currentImage, setCurrentImage] = useState("");
@@ -26,7 +26,7 @@ export default function Visualize() {
   useEffect(() => {
     getMostRecentImage();
     getMostRecentMaskImage();
-    getMostRecentWhiteBgMaskImage();
+    // getMostRecentWhiteBgMaskImage();
   }, []);
 
   useEffect(() => {
@@ -68,13 +68,13 @@ export default function Visualize() {
   /* 
   Get most recent whiteBgMaskImg that has been uploaded by current user
 */
-  const getMostRecentWhiteBgMaskImage = async () => {
-    const response = await fetch("/api/images/mostRecentWhiteBgMaskImage", {
-      cache: "no-store",
-    });
-    const data = await response.json();
-    setWhiteBgMaskImg(data.url);
-  };
+  // const getMostRecentWhiteBgMaskImage = async () => {
+  //   const response = await fetch("/api/images/mostRecentWhiteBgMaskImage", {
+  //     cache: "no-store",
+  //   });
+  //   const data = await response.json();
+  //   setWhiteBgMaskImg(data.url);
+  // };
 
   /* 
   Trigger dalle with current image.
@@ -112,7 +112,7 @@ export default function Visualize() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          url: whiteBgMaskImg,
+          url: maskImage,
         }),
       });
       const stabilityData = await stabilityResponse.json();
@@ -168,15 +168,13 @@ export default function Visualize() {
           </div>
         </div>
         <div className="h-[512px] bg-white flex justify-center items-center">
-          {((seeOriginal === true && !imageUrl) ||
-            (seeOriginal === false && !currentImage && isLoading === true)) && (
+          {isLoading === true && (
             <Loader
-            className="h-2/3 w-2/3 animate-spin-slow"
-            strokeWidth={0.5}
-             />
+              className="h-2/3 w-2/3 animate-spin-slow"
+              strokeWidth={0.5}
+            />
           )}
-
-          {seeOriginal === true && imageUrl && (
+          {!isLoading && seeOriginal === true && imageUrl && (
             <Image
               priority
               width={512}
@@ -185,7 +183,7 @@ export default function Visualize() {
               src={imageUrl}
             />
           )}
-          {seeOriginal === false && currentImage && (
+          {!isLoading && seeOriginal === false && currentImage && (
             <Image
               priority
               width={512}

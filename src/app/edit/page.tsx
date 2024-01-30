@@ -122,10 +122,14 @@ Get most recent MaskImg that has been uploaded by current user
     return can;
   };
 
+
+
   // Function to draw image on canvas
   const drawImageOnCanvas = (ctx, img, x, y, width, height, can) => {
     ctx.drawImage(img, x, y, width, height, 0, 0, can.width, can.height);
   };
+  
+
 
   // Function to return original image
   const returnOriginal = (event, ctx, originalCtx, getPos) => {
@@ -237,7 +241,7 @@ Get most recent MaskImg that has been uploaded by current user
     if (window.innerWidth > 768) {
       canvasSize = 512;
     } else {
-      canvasSize = (window.innerWidth * 5) / 6;
+      canvasSize = (window.innerWidth * 9) / 10;
     }
     let can = createCanvas(
       "PictureLayer",
@@ -245,6 +249,7 @@ Get most recent MaskImg that has been uploaded by current user
       canvasSize,
       "margin:auto;"
     );
+
     const outerCanvas = document.getElementById("outer-canvas");
     outerCanvas.appendChild(can);
     let ctx = can.getContext("2d");
@@ -389,7 +394,7 @@ Get most recent MaskImg that has been uploaded by current user
               </Button>
             </div>
           </div>
-          <div id="outer-canvas" className="h-[512px]  bg-white"></div>
+          <div id="outer-canvas" className="bg-yellow"></div>
         </main>
       </div>
     </>
