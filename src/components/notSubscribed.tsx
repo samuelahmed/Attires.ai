@@ -30,7 +30,7 @@ export default function NotSubscribed() {
   }, []);
 
   return (
-    <div className="">
+    <div className="space-y-2">
       <Button onClick={onSubscribe}>Sign Up</Button>
       <div>Monthly Images: {useage ? useage : "0"} / 10</div>
     </div>

@@ -35,7 +35,7 @@ export default function Subscribed() {
   }, []);
 
   return (
-    <div className="">
+    <div className="space-y-2">
       <Button onClick={onSubscribe}>Subscription Dashboard</Button>
       <div>Monthly Images: {useage ? useage : "0"} / 100</div>
     </div>
