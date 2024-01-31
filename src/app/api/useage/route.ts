@@ -21,13 +21,33 @@ export async function GET() {
   Return URL to be loaded by frontend
   */
   try {
-    //find all images with type: "Result-Dalle" and user Id
-    //count number of them
-    //return the total number
+
+    const subscription = await prismadb.subscription.findFirst({
+      where: {
+        userId: userId,
+      },
+    });
+
+    if (!subscription) {
+      throw new Error("Subscription not found for the user");
+    }
+
+    // console.log(subscription.stripeCurrentPeriodEnd);
+    if (!subscription.stripeCurrentPeriodEnd) {
+      throw new Error("Subscription period end date not found for the user");
+    }
+
+    const periodStart = new Date(subscription.stripeCurrentPeriodEnd);
+    periodStart.setDate(periodStart.getDate() - 30);
+
     const images = await prismadb.image.findMany({
       where: {
         type: "Result-Dalle",
         userId: userId,
+        createdAt: {
+          gte: periodStart,
+          lte: subscription.stripeCurrentPeriodEnd,
+        },
       },
     });
 
@@ -39,7 +59,6 @@ export async function GET() {
       count: count,
       success: true,
     });
-    
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message });
