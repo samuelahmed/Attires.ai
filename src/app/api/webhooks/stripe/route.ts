@@ -44,6 +44,9 @@ export async function POST(req: Request) {
         ),
       },
     });
+
+    // This is working on initial subcription
+    // Not working on  1) cancel & renew  2) sending event payment success from stripe dashboard
     await prismadb.user.update({
       where: {
         externalId: session?.metadata?.userId,
