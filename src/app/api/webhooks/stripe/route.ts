@@ -99,37 +99,37 @@ export async function POST(req: Request) {
 
         // This is working on initial subcription
     // Not working on  1) cancel & renew  2) sending event payment success from stripe dashboard
-    // const subscriptionRecord = await prismadb.subscription.findFirst({
-    //   where: {
-    //     stripeSubscriptionId: subscription.id,
-    //   },
-    // });
+    const subscriptionRecord = await prismadb.subscription.findFirst({
+      where: {
+        stripeSubscriptionId: subscription.id,
+      },
+    });
 
-    // let userId = "";
-    // if (subscriptionRecord) {
-    //   userId = subscriptionRecord.userId;
-    //   // Now you can use userId...
-    // } else {
-    //   console.log("meow");
-    //   // No subscription found with the given stripeSubscriptionId
-    // }
+    let userId = "";
+    if (subscriptionRecord) {
+      userId = subscriptionRecord.userId;
+      // Now you can use userId...
+    } else {
+      console.log("meow");
+      // No subscription found with the given stripeSubscriptionId
+    }
 
-    // await prismadb.user.update({
-    //   where: {
-    //     externalId: userId,
-    //   },
-    //   data: {
-    //     currentPeriodUse: 0,
-    //   },
-    // });
-    // await prismadb.user.update({
-    //   where: {
-    //     externalId: session?.metadata?.userId,
-    //   },
-    //   data: {
-    //     currentPeriodUse: 0,
-    //   },
-    // });
+    await prismadb.user.update({
+      where: {
+        externalId: userId,
+      },
+      data: {
+        currentPeriodUse: 0,
+      },
+    });
+    await prismadb.user.update({
+      where: {
+        externalId: session?.metadata?.userId,
+      },
+      data: {
+        currentPeriodUse: 0,
+      },
+    });
   }
 
   return new NextResponse(null, { status: 200 });
