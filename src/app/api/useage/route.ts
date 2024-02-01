@@ -22,6 +22,7 @@ export async function GET() {
   */
   try {
 
+    //Instead of looking through everything just check the use field in user table.
     const subscription = await prismadb.subscription.findFirst({
       where: {
         userId: userId,
