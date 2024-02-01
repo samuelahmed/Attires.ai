@@ -9,9 +9,7 @@ import { stripe } from "@/lib/stripe";
   When checkout session is complete it will create a subscription item in db
   When payment is successful it will update that item with new end period (is this during end of month?)
 */
-
 export async function POST(req: Request) {
-  
   const body = await req.text();
   const signature = headers().get("Stripe-Signature") as string;
   let event: Stripe.Event;
@@ -46,6 +44,14 @@ export async function POST(req: Request) {
         ),
       },
     });
+    await prismadb.user.update({
+      where: {
+        externalId: session?.metadata?.userId,
+      },
+      data: {
+        currentPeriodUse: 0,
+      },
+    });
   }
 
   if (event.type === "invoice.payment_succeeded") {
@@ -61,6 +67,14 @@ export async function POST(req: Request) {
         stripeCurrentPeriodEnd: new Date(
           subscription.current_period_end * 1000
         ),
+      },
+    });
+    await prismadb.user.update({
+      where: {
+        externalId: session?.metadata?.userId,
+      },
+      data: {
+        currentPeriodUse: 0,
       },
     });
   }

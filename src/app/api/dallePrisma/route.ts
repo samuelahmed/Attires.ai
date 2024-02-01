@@ -5,7 +5,6 @@ import { auth, currentUser } from "@clerk/nextjs";
 export const maxDuration = 100;
 
 export async function POST(request: Request) {
-
   /*
   Check current user and get ID
   */
@@ -29,6 +28,31 @@ export async function POST(request: Request) {
         userId: userId,
         type: "Result-Dalle",
         url: s3URL.image,
+      },
+    });
+
+    // Fetch the current subscription
+    const currentUserUseage = await prismadb.user.findUnique({
+      where: {
+        externalId: userId,
+      },
+    });
+
+    if (!currentUserUseage || currentUserUseage.currentPeriodUse === null) {
+      console.log("Subscription not found or currentPeriodUse is null");
+      return;
+    }
+    
+    // Increment currentPeriodUse by 1
+    const newCurrentPeriodUse = currentUserUseage.currentPeriodUse + 1;
+
+    // Update the subscription
+    await prismadb.user.update({
+      where: {
+        externalId: userId,
+      },
+      data: {
+        currentPeriodUse: newCurrentPeriodUse,
       },
     });
 

@@ -8,22 +8,13 @@ datasource db {
   relationMode = "prisma"
 }
 
-// Remove this when possible
-model Test {
-  id         Int     @id @default(autoincrement())
-  url        String
-  urlWhiteBg String
-  urlMask    String
-  stripeId   String?
-  userId     String?
-}
-
 model User {
-  id         Int      @id @default(autoincrement())
-  externalId String   @unique
-  attributes Json
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id               Int      @id @default(autoincrement())
+  externalId       String   @unique
+  attributes       Json
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  currentPeriodUse Int      @default(0)
 }
 
 model Subscription {
