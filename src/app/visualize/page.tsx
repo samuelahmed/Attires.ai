@@ -126,6 +126,7 @@ export default function Visualize() {
 */
   const callStability = async () => {
     setIsLoading(true);
+    console.log(maskImage);
     try {
       const stabilityResponse = await fetch("/api/stability", {
         method: "POST",
@@ -133,11 +134,24 @@ export default function Visualize() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          url: maskImage,
+          imgURL: maskImage,
         }),
       });
       const stabilityData = await stabilityResponse.json();
       setStabilityData(stabilityData);
+
+      setTotalUse((prevCount) => prevCount + 1);
+
+      //  Call the /api/stablityPrisma route with the s3URL
+      const prismaResponse = await fetch("/api/stabilityPrisma", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          file: stabilityData,
+        }),
+      });
     } catch (error) {
     } finally {
       setIsLoading(false);

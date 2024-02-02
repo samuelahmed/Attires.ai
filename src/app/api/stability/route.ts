@@ -3,10 +3,20 @@
 import { NextResponse } from "next/server";
 import fetch from "node-fetch";
 import FormData from "form-data";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { auth, currentUser } from "@clerk/nextjs";
 
 const engineId = "stable-diffusion-xl-1024-v1-0";
 const apiHost = process.env.API_HOST ?? "https://api.stability.ai";
 const apiKey = process.env.STABILITY_API_KEY;
+
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION!,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
 
 if (!apiKey) throw new Error("Missing Stability API key.");
 
@@ -22,10 +32,9 @@ async function appendFileFromUrl(url: any, formData: any) {
   });
 }
 
-export async function POST(req: any) {
-  const { url } = await req.json();
+async function uploadResultToS3(imgURL: string) {
   const formData = new FormData();
-  const imageUrl = url;
+  const imageUrl = imgURL;
   await appendFileFromUrl(imageUrl, formData);
 
   formData.append("mask_source", "INIT_IMAGE_ALPHA");
@@ -73,9 +82,45 @@ export async function POST(req: any) {
       finishReason: string;
     }>;
   }
+  const key = `${Date.now()}`;
   const responseJSON = (await response.json()) as GenerationResponse;
   const image = responseJSON.artifacts[0];
-  const base64Image = `data:image/png;base64,${image.base64}`;
+  const base64Data = image.base64;
+  // const base64Image = `data:image/png;base64,${base64Data}`;
+  const imageBuffer = Buffer.from(base64Data, "base64");
 
-  return new Response(JSON.stringify({ image: base64Image }), { status: 200 });
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: key,
+    Body: imageBuffer,
+    ContentType: "image/png",
+  };
+
+  const command = new PutObjectCommand(params);
+  await s3Client.send(command);
+  const s3URL = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  return { s3URL };
+}
+
+export async function POST(req: any) {
+  const { userId } = auth();
+  const user = await currentUser();
+  if (!userId || !user) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
+  try {
+
+    const { imgURL } = await req.json();
+    const result = await uploadResultToS3(imgURL);
+    // const base64Image = result.base64Image;
+    const s3URL = result.s3URL;
+    console.log(s3URL, "RETURN URL");
+
+    return new Response(JSON.stringify({ image: s3URL }), {
+      status: 200,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+  }
 }
