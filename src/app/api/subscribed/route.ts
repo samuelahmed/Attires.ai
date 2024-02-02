@@ -6,10 +6,13 @@ export const maxDuration = 100;
 export const fetchCache = "force-no-store";
 export const revalidate = 0;
 
+const DAY_IN_MS = 86_400_000;
+
 export async function GET() {
   /*
   Check current user and get ID
   */
+
   const { userId } = auth();
   const user = await currentUser();
   if (!userId || !user) {
@@ -17,21 +20,36 @@ export async function GET() {
   }
 
   try {
-    const user = await prismadb.user.findFirst({
+    const userSubscription = await prismadb.subscription.findUnique({
       where: {
-        externalId: userId,
+        userId: userId,
+      },
+      select: {
+        stripeCurrentPeriodEnd: true,
+        stripeCustomerId: true,
+        stripePriceId: true,
+        stripeSubscriptionId: true,
       },
     });
 
-    let currentPeriodUse = 0;
-    if (user) {
-      currentPeriodUse = user.currentPeriodUse;
-    } else {
+    if (!userSubscription) {
+      return NextResponse.json({
+        isSubscriptionActive: false,
+      });
+    }
+
+    let isSubscriptionActive = false;
+
+    if (
+      userSubscription.stripePriceId &&
+      userSubscription.stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS >
+        Date.now()
+    ) {
+      isSubscriptionActive = true;
     }
 
     return NextResponse.json({
-      currentPeriodUse: currentPeriodUse,
-      success: true,
+      isSubscriptionActive,
     });
   } catch (error) {
     if (error instanceof Error) {

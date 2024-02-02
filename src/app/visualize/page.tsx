@@ -17,7 +17,8 @@ export default function Visualize() {
   const [seeOriginal, setSeeOriginal] = useState(true);
   const [currentImage, setCurrentImage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [totalUse, setTotalUse] = useState('');
+  const [totalUse, setTotalUse] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const toggleSeeOriginal = () => {
     setSeeOriginal(!seeOriginal);
@@ -27,6 +28,7 @@ export default function Visualize() {
     getMostRecentImage();
     getMostRecentMaskImage();
     getTotalUseage();
+    getSubscription();
   }, []);
 
   useEffect(() => {
@@ -66,15 +68,21 @@ export default function Visualize() {
   };
 
   // Call API asking how many images have been used.
-
   const getTotalUseage = async () => {
     const response = await fetch("/api/useage", {
       cache: "no-store",
     });
     const data = await response.json();
-    // console.log(data, 'USEAGE')
-    setTotalUse(data.count);
-    // setMaskImage(data.url);
+    setTotalUse(data.currentPeriodUse);
+  };
+
+  // Call API asking if use is subscribed
+  const getSubscription = async () => {
+    const response = await fetch("/api/subscribed", {
+      cache: "no-store",
+    });
+    const data = await response.json();
+    setIsSubscribed(data.isSubscriptionActive);
   };
 
   /* 
@@ -95,7 +103,7 @@ export default function Visualize() {
       });
       const data = await response.json();
       setDalleResult(data);
-      setTotalUse(prevCount => prevCount + 1);
+      setTotalUse((prevCount) => prevCount + 1);
 
       // Call the /api/dallePrisma route with the s3URL
       const prismaResponse = await fetch("/api/dallePrisma", {
@@ -182,9 +190,6 @@ export default function Visualize() {
             </Button>
           </div>
         </div>
-        <div>
-          total use {totalUse} / 100
-        </div>
         <div className="h-[512px] bg-white flex justify-center items-center">
           {isLoading === true && (
             <Loader
@@ -211,6 +216,8 @@ export default function Visualize() {
             />
           )}
         </div>
+        {isSubscribed === true && <div>{totalUse} / 100</div>}
+        {isSubscribed === false && <div>{totalUse} / 10</div>}
       </main>
     </div>
   );
