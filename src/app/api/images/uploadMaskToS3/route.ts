@@ -8,6 +8,7 @@ import PipelineSingleton from "./pipeline.js";
 
 export const maxDuration = 100;
 
+
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
   credentials: {
@@ -17,6 +18,8 @@ const s3Client = new S3Client({
 });
 
 async function maskImage(imgUrl: string) {
+
+  console.log('MASK TO S3')
   const destructureUrl = new URL(imgUrl);
   const url = destructureUrl.href;
   const pathName = decodeURIComponent(destructureUrl.pathname);
