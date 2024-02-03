@@ -67,8 +67,8 @@ export default function Header() {
       if (response.ok) {
         const data = await response.json();
         await createMaskImg(data.s3URL);
-        await createWhiteBgImg(data.s3URL);
-        await createWhiteBgMaskImg(data.s3URL);
+        // await createWhiteBgImg(data.s3URL);
+        // await createWhiteBgMaskImg(data.s3URL);
         location.reload();
       } else {
         setUploading(false);
@@ -83,6 +83,7 @@ export default function Header() {
     Take the URL from standard image and pass it to API that creates a mask
   */
   const createMaskImg = async (imgUrl: string) => {
+    console.log('here')
     try {
       const response = await fetch("/api/images/uploadMaskToS3", {
         method: "POST",
