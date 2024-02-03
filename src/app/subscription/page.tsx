@@ -40,13 +40,24 @@ export default function Payments() {
     getSubscription();
   }, []);
 
+  console.log(isSubscribed, "IS subscribed");
+
   return (
     <div className="backgroundStyle h-screen w-screen flex flex-col">
       <Header />
       <main className="flex flex-col flex-grow items-center space-y-10 mt-10">
         <div className="w-4/5 md:w-1/2 flex flex-col space-y-2">
           <div className="space-y-2">
-            <Button onClick={onSubscribe}>Sign Up</Button>
+            {isSubscribed === true && (
+              <div>
+                <Button onClick={onSubscribe}>Manage Subscription</Button>
+              </div>
+            )}
+            {isSubscribed === false && (
+              <div>
+                <Button onClick={onSubscribe}>Sign Up</Button>
+              </div>
+            )}
             <div className="flex flex-row">
               <p className="pr-1">Monthly Use:</p>
               {isSubscribed === true && <div>{useage} / 100</div>}
