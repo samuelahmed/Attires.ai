@@ -28,7 +28,7 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
     image = await image.writeAsync(fileName);
   }
 
-  
+  console.log('MADE IT HERE')
   // Resize image if it's larger than 4 MB
   const maxSize = 4 * 1024 * 1024;
   if (image.bitmap.data.length > maxSize) {

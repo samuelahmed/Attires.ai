@@ -39,17 +39,22 @@ export default function Header() {
   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const supportedFileTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/bmp",
-      "image/tiff",
-      "image/gif",
-    ];
-    if (!file || !supportedFileTypes.includes(file.type)) {
-      setErrorMessage("Please upload a JPEG, PNG, BMP, TIFF, or GIF image.");
-      return;
+
+    if (!file) {
+      return
     }
+    // const supportedFileTypes = [
+    //   "image/jpeg",
+    //   "image/png",
+    //   "image/bmp",
+    //   "image/tiff",
+    //   "image/gif",
+    // ];
+
+    // if (!file || !supportedFileTypes.includes(file.type)) {
+    //   setErrorMessage("Please upload a JPEG, PNG, BMP, TIFF, or GIF image.");
+    //   return;
+    // }
 
     setUploading(true);
     const formData = new FormData();
