@@ -6,14 +6,21 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
-let url = "https://ui.shadcn.com";
-let ogImage = "https://ui.shadcn.com/og.jpg";
+let url = "https://www.attires.ai";
+let ogImage = "https://www.attires.ai/logo.png";
 let name = "meow";
 let description = "Your personal virtual wardrobe";
 
 export const metadata: Metadata = {
   title: "Attires.ai",
   description: description,
+  keywords: [
+    // "Next.js",
+    // "React",
+    // "Tailwind CSS",
+    // "Server Components",
+    // "Radix UI",
+  ],
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -35,7 +42,7 @@ export const metadata: Metadata = {
     title: name,
     description: description,
     images: [ogImage],
-    creator: "@shadcn",
+    creator: "Attires.ai",
   },
 };
 
