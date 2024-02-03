@@ -69,7 +69,7 @@ export default function Header() {
         await createMaskImg(data.s3URL);
         // await createWhiteBgImg(data.s3URL);
         // await createWhiteBgMaskImg(data.s3URL);
-        location.reload();
+        // location.reload();
       } else {
         setUploading(false);
       }
@@ -92,7 +92,9 @@ export default function Header() {
         },
         body: JSON.stringify({ imgUrl }),
       });
-      if (!response.ok) {
+      if (response.ok) {
+        location.reload();
+      } else {
         console.error("Response:", response);
         const responseBody = await response.text();
         console.error("Response body:", responseBody);

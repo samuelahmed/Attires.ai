@@ -28,6 +28,7 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
   //   image = await image.writeAsync(fileName);
   // }
 
+
     // Convert image to PNG
     let image = await Jimp.read(file);
     if (image.getMIME() !== Jimp.MIME_PNG) {
