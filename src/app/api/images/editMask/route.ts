@@ -16,37 +16,28 @@ const s3Client = new S3Client({
   },
 });
 
-// replace all the useless resize and stuff in here - not needed
-
 async function uploadFileToS3(file, fileName) {
   let image = await Jimp.read(file);
-
-  // Resize image if it's larger than 4 MB
-  const maxSize = 4 * 1024 * 1024; // 4 MB in bytes
+  const maxSize = 4 * 1024 * 1024;
   if (image.bitmap.data.length > maxSize) {
     const scaleFactor = Math.sqrt(maxSize / image.bitmap.data.length);
     const width = Math.floor(image.bitmap.width * scaleFactor);
     const height = Math.floor(image.bitmap.height * scaleFactor);
     image = image.resize(width, height);
   }
-
-  // Resize image to fit within 1024x1024
   const scaleFactor = 1024 / Math.max(image.bitmap.width, image.bitmap.height);
   let width = Math.floor(image.bitmap.width * scaleFactor);
   let height = Math.floor(image.bitmap.height * scaleFactor);
   image = image.resize(width, height);
-  // Create a new 1024x1024 white image
+
   let transparentImage = new Jimp(1024, 1024, Jimp.rgbaToInt(0, 0, 0, 0));
-  // Calculate the position to center the image
   let x = (1024 - width) / 2;
   let y = (1024 - height) / 2;
-  // Composite the original image onto the white image
+
   transparentImage = transparentImage.composite(image, x, y);
-  // Now use transparentImage instead of image
   image = transparentImage;
 
   const processedImageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
-
   const key = `${fileName}-${Date.now()}`;
 
   const params = {

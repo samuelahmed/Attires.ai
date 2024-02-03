@@ -110,7 +110,6 @@ export async function POST(req: any) {
   }
 
   try {
-
     const { imgURL } = await req.json();
     const result = await uploadResultToS3(imgURL);
     // const base64Image = result.base64Image;
