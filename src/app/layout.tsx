@@ -13,7 +13,6 @@ let description = "Your personal virtual wardrobe";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.attires.ai'),
-
   title: "Attires.ai",
   description: description,
 }
