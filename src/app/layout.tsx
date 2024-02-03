@@ -12,6 +12,8 @@ let name = "meow";
 let description = "Your personal virtual wardrobe";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.attires.ai'),
+
   title: "Attires.ai",
   description: description,
   keywords: [
@@ -31,8 +33,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: ogImage,
-        width: 1200,
-        height: 630,
+        // width: 1200,
+        // height: 630,
         alt: name,
       },
     ],
