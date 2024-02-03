@@ -25,6 +25,7 @@ export default function Header() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -38,7 +39,18 @@ export default function Header() {
   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!file) return;
+    const supportedFileTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/bmp",
+      "image/tiff",
+      "image/gif",
+    ];
+    if (!file || !supportedFileTypes.includes(file.type)) {
+      setErrorMessage("Please upload a JPEG, PNG, BMP, TIFF, or GIF image.");
+      return;
+    }
+
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
@@ -52,7 +64,7 @@ export default function Header() {
         await createMaskImg(data.s3URL);
         await createWhiteBgImg(data.s3URL);
         await createWhiteBgMaskImg(data.s3URL);
-        location.reload(); 
+        location.reload();
       } else {
         setUploading(false);
       }
@@ -182,6 +194,11 @@ export default function Header() {
                         {uploading ? "Uploading..." : "Upload"}
                       </Button>
                     </form>
+                    {errorMessage && (
+                      <span className="text-red-600 text-xs">
+                        {errorMessage}
+                      </span>
+                    )}
                   </PopoverContent>
                 </Popover>
               </MenubarContent>
