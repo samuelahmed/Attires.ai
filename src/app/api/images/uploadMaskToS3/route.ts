@@ -17,9 +17,21 @@ const s3Client = new S3Client({
   },
 });
 
+/*
+BUG 
+An error occurred while writing the file to cache: [Error: ENOENT: no such file or directory, mkdir '/vercel'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'mkdir',
+  path: '/vercel'
+}
+
+
+
+*/ 
 async function maskImage(imgUrl: string) {
 
-  console.log('MASK TO S3')
+  // console.log('MASK TO S3')
   const destructureUrl = new URL(imgUrl);
   const url = destructureUrl.href;
   const pathName = decodeURIComponent(destructureUrl.pathname);
