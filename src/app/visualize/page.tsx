@@ -89,35 +89,45 @@ export default function Visualize() {
   Trigger dalle with current image.
 */
   const callDalle = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/dalle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          input: clientContent,
-          imgURL: maskImage,
-        }),
-      });
-      const data = await response.json();
-      setDalleResult(data);
-      setTotalUse((prevCount) => prevCount + 1);
+    if (
+      (isSubscribed === true && totalUse <= 100) ||
+      (isSubscribed !== true && totalUse <= 10)
+    ) {
+      setIsLoading(true);
+      setSeeOriginal(false);
+      try {
+        const response = await fetch("/api/dalle", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            input: clientContent,
+            imgURL: maskImage,
+          }),
+        });
+        const data = await response.json();
+        setDalleResult(data);
+        setTotalUse((prevCount) => prevCount + 1);
 
-      // Call the /api/dallePrisma route with the s3URL
-      const prismaResponse = await fetch("/api/dallePrisma", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          file: data,
-        }),
-      });
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
+        // Call the /api/dallePrisma route with the s3URL
+        const prismaResponse = await fetch("/api/dallePrisma", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            file: data,
+          }),
+        });
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    } else if (isSubscribed === true && totalUse > 100) {
+      alert("out of use - max 100");
+    } else if (isSubscribed !== true && totalUse > 10) {
+      alert("out of use - max 10");
     }
   };
 
@@ -125,36 +135,45 @@ export default function Visualize() {
   Trigger Stability with current image.
 */
   const callStability = async () => {
-    setIsLoading(true);
-    console.log(maskImage);
-    try {
-      const stabilityResponse = await fetch("/api/stability", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          imgURL: maskImage,
-        }),
-      });
-      const stabilityData = await stabilityResponse.json();
-      setStabilityData(stabilityData);
+    if (
+      (isSubscribed === true && totalUse <= 100) ||
+      (isSubscribed !== true && totalUse <= 10)
+    ) {
+      setIsLoading(true);
+      setSeeOriginal(false);
+      try {
+        const stabilityResponse = await fetch("/api/stability", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            imgURL: maskImage,
+          }),
+        });
+        const stabilityData = await stabilityResponse.json();
+        setStabilityData(stabilityData);
 
-      setTotalUse((prevCount) => prevCount + 1);
+        setTotalUse((prevCount) => prevCount + 1);
 
-      //  Call the /api/stablityPrisma route with the s3URL
-      const prismaResponse = await fetch("/api/stabilityPrisma", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          file: stabilityData,
-        }),
-      });
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
+        //  Call the /api/stablityPrisma route with the s3URL
+        const prismaResponse = await fetch("/api/stabilityPrisma", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            file: stabilityData,
+          }),
+        });
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    } else if (isSubscribed === true && totalUse > 100) {
+      alert("out of use - max 100");
+    } else if (isSubscribed !== true && totalUse > 10) {
+      alert("out of use - max 10");
     }
   };
 
@@ -181,7 +200,6 @@ export default function Visualize() {
             <Button
               onClick={() => {
                 callDalle();
-                setSeeOriginal(false);
               }}
               disabled={isLoading}
               id="Activate Visualizer AI"
@@ -192,7 +210,6 @@ export default function Visualize() {
             <Button
               onClick={() => {
                 callStability();
-                setSeeOriginal(false);
               }}
               disabled={isLoading}
               id="Activate Visualizer AI"
