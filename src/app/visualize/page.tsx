@@ -158,8 +158,6 @@ export default function Visualize() {
     }
   };
 
-  // Check useage
-
   return (
     <div className="backgroundStyle h-screen w-screen flex flex-col">
       <Header />

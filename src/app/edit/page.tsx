@@ -50,13 +50,11 @@ Get most recent MaskImg that has been uploaded by current user
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
-
     try {
       const response = await fetch("/api/images/editMask", {
         method: "POST",
         body: formData,
       });
-
       if (response.ok) {
         location.reload();
       }
@@ -65,8 +63,8 @@ Get most recent MaskImg that has been uploaded by current user
       setUploading(false);
     }
   };
+
   const downloadMask = async () => {
-    // console.log("download mask");
     const node = document.getElementById("PictureLayer");
     if (!node) return;
     const dataUrl = node.toDataURL().split(",")[1];

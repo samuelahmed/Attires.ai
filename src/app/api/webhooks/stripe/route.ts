@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
-    
+
     if (!session?.metadata?.userId) {
       return new NextResponse("User id is required", { status: 400 });
     }
@@ -45,46 +45,12 @@ export async function POST(req: Request) {
         ),
       },
     });
-
-    // This is working on initial subcription
-    // Not working on  1) cancel & renew  2) sending event payment success from stripe dashboard
-    // const subscriptionRecord = await prismadb.subscription.findFirst({
-    //   where: {
-    //     stripeSubscriptionId: subscription.id,
-    //   },
-    // });
-
-    // let userId = "";
-    // if (subscriptionRecord) {
-    //   userId = subscriptionRecord.userId;
-    //   // Now you can use userId...
-    // } else {
-    //   console.log("meow");
-    //   // No subscription found with the given stripeSubscriptionId
-    // }
-
-    // await prismadb.user.update({
-    //   where: {
-    //     externalId: userId,
-    //   },
-    //   data: {
-    //     currentPeriodUse: 0,
-    //   },
-    // });
   }
-
-
-
 
   if (event.type === "invoice.payment_succeeded") {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
-
-
-    console.log(subscription, 'subscription')
-
-
     await prismadb.subscription.update({
       where: {
         stripeSubscriptionId: subscription.id,
@@ -97,8 +63,6 @@ export async function POST(req: Request) {
       },
     });
 
-        // This is working on initial subcription
-    // Not working on  1) cancel & renew  2) sending event payment success from stripe dashboard
     const subscriptionRecord = await prismadb.subscription.findFirst({
       where: {
         stripeSubscriptionId: subscription.id,
@@ -108,10 +72,7 @@ export async function POST(req: Request) {
     let userId = "";
     if (subscriptionRecord) {
       userId = subscriptionRecord.userId;
-      // Now you can use userId...
     } else {
-      console.log("meow");
-      // No subscription found with the given stripeSubscriptionId
     }
 
     await prismadb.user.update({

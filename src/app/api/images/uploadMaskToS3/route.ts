@@ -8,7 +8,6 @@ import PipelineSingleton from "./pipeline.js";
 
 export const maxDuration = 100;
 
-
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
   credentials: {
@@ -19,24 +18,19 @@ const s3Client = new S3Client({
 
 /*
 BUG 
-An error occurred while writing the file to cache: [Error: ENOENT: no such file or directory, mkdir '/vercel'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'mkdir',
-  path: '/vercel'
-}
-
-
-
-*/ 
+  An error occurred while writing the file to cache: [Error: ENOENT: no such file or directory, mkdir '/vercel'] {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'mkdir',
+    path: '/vercel'
+  }
+*/
 async function maskImage(imgUrl: string) {
-
   // console.log('MASK TO S3')
   const destructureUrl = new URL(imgUrl);
   const url = destructureUrl.href;
   const pathName = decodeURIComponent(destructureUrl.pathname);
   const fileName = pathName.split("/").pop() || "";
-
   // @ts-ignore
   const segmenter = await PipelineSingleton.getInstance();
   const output = await segmenter(url);
@@ -47,17 +41,12 @@ async function maskImage(imgUrl: string) {
     will be transparent and the AI will attempt to fill those areas. 
   */
   let whiteImage = new Jimp(1024, 1024, Jimp.rgbaToInt(255, 255, 255, 255));
-  // Resize image to fit within 1024x1024
   const scaleFactor = 1024 / Math.max(image.bitmap.width, image.bitmap.height);
   let width = Math.floor(image.bitmap.width * scaleFactor);
   let height = Math.floor(image.bitmap.height * scaleFactor);
   image = image.resize(width, height);
-
-  // Calculate the position to center the image
   let x = (1024 - width) / 2;
   let y = (1024 - height) / 2;
-
-  // Composite the original image onto the white image
   whiteImage = whiteImage.composite(image, x, y);
 
   interface Segment {
@@ -68,6 +57,7 @@ async function maskImage(imgUrl: string) {
       data: number[];
     };
   }
+
   const labels = [
     "Upper-clothes",
     "Pants",
@@ -78,6 +68,7 @@ async function maskImage(imgUrl: string) {
     "Left-leg",
     "Right-leg",
   ];
+  
   const masks = output
     .filter((segment: Segment) => labels.includes(segment.label))
     .map((segment: Segment) => segment.mask);

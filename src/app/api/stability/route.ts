@@ -86,7 +86,6 @@ async function uploadResultToS3(imgURL: string) {
   const responseJSON = (await response.json()) as GenerationResponse;
   const image = responseJSON.artifacts[0];
   const base64Data = image.base64;
-  // const base64Image = `data:image/png;base64,${base64Data}`;
   const imageBuffer = Buffer.from(base64Data, "base64");
 
   const params = {
@@ -112,10 +111,7 @@ export async function POST(req: any) {
   try {
     const { imgURL } = await req.json();
     const result = await uploadResultToS3(imgURL);
-    // const base64Image = result.base64Image;
     const s3URL = result.s3URL;
-    console.log(s3URL, "RETURN URL");
-
     return new Response(JSON.stringify({ image: s3URL }), {
       status: 200,
     });
