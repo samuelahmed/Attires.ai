@@ -7,6 +7,9 @@ import Header from "@/components/header";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Loader } from "lucide-react";
+import { useToast } from "@/components/ui/useToast";
+import { ToastAction } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 
 export default function Visualize() {
   const [imageUrl, setImageUrl] = useState("");
@@ -19,6 +22,9 @@ export default function Visualize() {
   const [isLoading, setIsLoading] = useState(false);
   const [totalUse, setTotalUse] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const { toast } = useToast();
+  const router = useRouter();
 
   const toggleSeeOriginal = () => {
     setSeeOriginal(!seeOriginal);
@@ -90,8 +96,8 @@ export default function Visualize() {
 */
   const callDalle = async () => {
     if (
-      (isSubscribed === true && totalUse <= 100) ||
-      (isSubscribed !== true && totalUse <= 10)
+      (isSubscribed === true && totalUse < 100) ||
+      (isSubscribed !== true && totalUse < 10)
     ) {
       setIsLoading(true);
       setSeeOriginal(false);
@@ -124,10 +130,39 @@ export default function Visualize() {
       } finally {
         setIsLoading(false);
       }
-    } else if (isSubscribed === true && totalUse > 100) {
-      alert("out of use - max 100");
-    } else if (isSubscribed !== true && totalUse > 10) {
-      alert("out of use - max 10");
+    } else if (isSubscribed === true && totalUse >= 100) {
+      toast({
+        title: "You've used your 100 monthly images",
+        description: "Contact us if you would like to increase your limit.",
+        variant: "destructive",
+        action: (
+          <ToastAction
+            onClick={() => {
+              router.push("/subscription");
+            }}
+            altText="Try again"
+          >
+            Subscribe
+          </ToastAction>
+        ),
+      });
+      // alert("out of use - max 100");
+    } else if (isSubscribed !== true && totalUse >= 10) {
+      toast({
+        title: "You've ran out of free images",
+        description: "Subscribe for 100 monthly images.",
+        variant: "destructive",
+        action: (
+          <ToastAction
+            onClick={() => {
+              router.push("/subscription");
+            }}
+            altText="Try again"
+          >
+            Subscribe
+          </ToastAction>
+        ),
+      });
     }
   };
 
@@ -136,8 +171,8 @@ export default function Visualize() {
 */
   const callStability = async () => {
     if (
-      (isSubscribed === true && totalUse <= 100) ||
-      (isSubscribed !== true && totalUse <= 10)
+      (isSubscribed === true && totalUse < 100) ||
+      (isSubscribed !== true && totalUse < 10)
     ) {
       setIsLoading(true);
       setSeeOriginal(false);
@@ -170,10 +205,39 @@ export default function Visualize() {
       } finally {
         setIsLoading(false);
       }
-    } else if (isSubscribed === true && totalUse > 100) {
-      alert("out of use - max 100");
-    } else if (isSubscribed !== true && totalUse > 10) {
-      alert("out of use - max 10");
+    } else if (isSubscribed === true && totalUse >= 100) {
+      toast({
+        title: "You've used your 100 monthly images",
+        description: "Contact us if you would like to increase your limit.",
+        variant: "destructive",
+        action: (
+          <ToastAction
+            onClick={() => {
+              router.push("/subscription");
+            }}
+            altText="Try again"
+          >
+            Subscribe
+          </ToastAction>
+        ),
+      });
+      // alert("out of use - max 100");
+    } else if (isSubscribed !== true && totalUse >= 10) {
+      toast({
+        title: "You've ran out of free images",
+        description: "Subscribe for 100 monthly images.",
+        variant: "destructive",
+        action: (
+          <ToastAction
+            onClick={() => {
+              router.push("/subscription");
+            }}
+            altText="Try again"
+          >
+            Subscribe
+          </ToastAction>
+        ),
+      });
     }
   };
 
