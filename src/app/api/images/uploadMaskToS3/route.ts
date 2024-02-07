@@ -5,6 +5,9 @@ import Jimp from "jimp";
 import { auth, currentUser } from "@clerk/nextjs";
 // @ts-ignore
 import PipelineSingleton from "./pipeline.js";
+import fs from 'fs';
+import path from 'path';
+
 
 export const maxDuration = 100;
 
@@ -25,6 +28,12 @@ BUG
     path: '/vercel'
   }
 */
+// Fix for bug here let's see if it works
+const dirPath = path.resolve('/vercel');
+if (!fs.existsSync(dirPath)) {
+  fs.mkdirSync(dirPath, { recursive: true });
+}
+
 async function maskImage(imgUrl: string) {
   // console.log('MASK TO S3')
   const destructureUrl = new URL(imgUrl);

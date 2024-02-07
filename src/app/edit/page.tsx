@@ -234,6 +234,7 @@ Get most recent MaskImg that has been uploaded by current user
     if (node && node.parentNode) {
       node.parentNode.removeChild(node);
     }
+    /*
     // why is this causing issues sometimes?
     // let canvasSize;
     // if (window.innerWidth > 768) {
@@ -247,6 +248,28 @@ Get most recent MaskImg that has been uploaded by current user
       // canvasSize,
       width,
       height,
+      "margin:auto;"
+    );
+    */
+
+    let imgWidth = img.naturalWidth;
+    let imgHeight = img.naturalHeight;
+    let aspectRatio = imgWidth / imgHeight;
+
+    let canvasSize;
+    if (window.innerWidth > 768) {
+      canvasSize = 512;
+    } else {
+      canvasSize = (window.innerWidth * 9) / 10;
+    }
+
+    let canvasWidth = canvasSize;
+    let canvasHeight = canvasSize / aspectRatio;
+
+    let can = createCanvas(
+      "PictureLayer",
+      canvasWidth,
+      canvasHeight,
       "margin:auto;"
     );
 
