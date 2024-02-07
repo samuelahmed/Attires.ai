@@ -103,12 +103,10 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({
-        status: 500,
         error: error.message,
       });
     } else {
       return NextResponse.json({
-        status: 500,
         error: "An unknown error occurred",
       });
     }

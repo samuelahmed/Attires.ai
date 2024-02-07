@@ -25,10 +25,9 @@ BUG
     path: '/vercel'
   }
 */
-// Fix for bug here let's see if it works
+// Temp fix by placing await s3Client.send(maskCommand) in a try block
 
 async function maskImage(imgUrl: string) {
-  // console.log('MASK TO S3')
   const destructureUrl = new URL(imgUrl);
   const url = destructureUrl.href;
   const pathName = decodeURIComponent(destructureUrl.pathname);
@@ -137,12 +136,10 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({
-        status: 500,
         error: error.message,
       });
     } else {
       return NextResponse.json({
-        status: 500,
         error: "An unknown error occurred",
       });
     }

@@ -32,18 +32,11 @@ export default function Header() {
       setFile(e.target.files[0]);
     }
   };
-
-  /*
-    Take the image the user upload and pass it to backend API to be resized and upload to s3
-    The s3 URL is then returned and a mask-image and white-background-mask-image are created
-  */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!file) {
       return;
     }
-
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
@@ -63,10 +56,6 @@ export default function Header() {
       setUploading(false);
     }
   };
-
-  /*
-    Take the URL from standard image and pass it to API that creates a mask
-  */
   const createMaskImg = async (imgUrl: string) => {
     console.log("here");
     try {
@@ -89,6 +78,7 @@ export default function Header() {
     }
   };
 
+  
   return (
     <>
       <header className="w-screen h-14 px-2 py-2 md:px-10 space-x-2 flex flex-row items-center justify-between">
