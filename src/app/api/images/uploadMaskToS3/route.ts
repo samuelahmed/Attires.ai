@@ -30,8 +30,8 @@ BUG
 async function maskImage(imgUrl: string) {
   const destructureUrl = new URL(imgUrl);
   const url = destructureUrl.href;
-  const pathName = decodeURIComponent(destructureUrl.pathname);
-  const fileName = pathName.split("/").pop() || "";
+  // const pathName = decodeURIComponent(destructureUrl.pathname);
+  // const fileName = pathName.split("/").pop() || "";
   // @ts-ignore
   const segmenter = await PipelineSingleton.getInstance();
   const output = await segmenter(url);
@@ -84,7 +84,9 @@ async function maskImage(imgUrl: string) {
   }
 
   const processedImageBuffer = await whiteImage.getBufferAsync(Jimp.MIME_PNG);
-  const maskKey = `${fileName}-mask-${Date.now()}`;
+  const maskKey = `-mask-${Date.now()}`;
+
+  // const maskKey = `${fileName}-mask-${Date.now()}`;
   const maskParams = {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: maskKey,
