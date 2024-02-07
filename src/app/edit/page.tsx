@@ -235,16 +235,18 @@ Get most recent MaskImg that has been uploaded by current user
       node.parentNode.removeChild(node);
     }
     // why is this causing issues sometimes?
-    let canvasSize;
-    if (window.innerWidth > 768) {
-      canvasSize = 512;
-    } else {
-      canvasSize = (window.innerWidth * 9) / 10;
-    }
+    // let canvasSize;
+    // if (window.innerWidth > 768) {
+    //   canvasSize = 512;
+    // } else {
+    //   canvasSize = (window.innerWidth * 9) / 10;
+    // }
     let can = createCanvas(
       "PictureLayer",
-      canvasSize,
-      canvasSize,
+      // canvasSize,
+      // canvasSize,
+      width,
+      height,
       "margin:auto;"
     );
 
@@ -261,6 +263,7 @@ Get most recent MaskImg that has been uploaded by current user
     let originalCanvas = createCanvas("originalCanvas", can.width, can.height);
     let originalCtx = originalCanvas.getContext("2d");
     drawImageOnCanvas(originalCtx, originalImg, x, y, width, height, can);
+
     can.addEventListener("mousedown", (event) => {
       if (returnOgRef.current) {
         startReturning(
