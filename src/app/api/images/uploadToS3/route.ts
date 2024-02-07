@@ -16,26 +16,12 @@ const s3Client = new S3Client({
 
 async function uploadFileToS3(file: Buffer, fileName: string) {
   // Convert image to PNG
-  // let image;
-  // try {
-  //   image = await Jimp.read(file);
-  // } catch (error) {
-  //   throw new Error("Unsupported image format. Please upload a JPEG, PNG, BMP, TIFF, or GIF image.");
-  // }
-
-  // if (image.getMIME() !== Jimp.MIME_PNG) {
-  //   fileName = fileName.replace(/\.[^/.]+$/, "") + ".png";
-  //   image = await image.writeAsync(fileName);
-  // }
-
-  // Convert image to PNG
   let image = await Jimp.read(file);
   if (image.getMIME() !== Jimp.MIME_PNG) {
     fileName = "/tmp/" + fileName.replace(/\.[^/.]+$/, "") + ".png";
     image = await image.writeAsync(fileName);
   }
 
-  // console.log("MADE IT HERE");
   // Resize image if it's larger than 4 MB
   const maxSize = 4 * 1024 * 1024;
   if (image.bitmap.data.length > maxSize) {
