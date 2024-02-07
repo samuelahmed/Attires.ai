@@ -6,7 +6,6 @@ import { auth, currentUser } from "@clerk/nextjs";
 // @ts-ignore
 import PipelineSingleton from "./pipeline.js";
 
-
 export const maxDuration = 100;
 
 const s3Client = new S3Client({
@@ -27,8 +26,6 @@ BUG
   }
 */
 // Fix for bug here let's see if it works
-
-
 
 async function maskImage(imgUrl: string) {
   // console.log('MASK TO S3')
@@ -73,7 +70,7 @@ async function maskImage(imgUrl: string) {
     "Left-leg",
     "Right-leg",
   ];
-  
+
   const masks = output
     .filter((segment: Segment) => labels.includes(segment.label))
     .map((segment: Segment) => segment.mask);
@@ -96,7 +93,12 @@ async function maskImage(imgUrl: string) {
     ContentType: "image/png",
   };
   const maskCommand = new PutObjectCommand(maskParams);
-  await s3Client.send(maskCommand);
+
+  try {
+    await s3Client.send(maskCommand);
+  } catch (error) {
+    console.error("Failed to send command to S3:", error);
+  }
   const s3URLMaskImg = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${maskKey}`;
   return s3URLMaskImg;
 }
@@ -120,7 +122,7 @@ export async function POST(request: Request) {
   const { imgUrl } = await request.json();
   try {
     const s3URL = await maskImage(imgUrl);
-    
+
     const newEntry = await prismadb.image.create({
       data: {
         userId: userId,
@@ -134,9 +136,15 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     if (error instanceof Error) {
-      return NextResponse.json({ error: error.message });
+      return NextResponse.json({
+        status: 500,
+        error: error.message,
+      });
     } else {
-      return NextResponse.json({ error: "An unknown error occurred" });
+      return NextResponse.json({
+        status: 500,
+        error: "An unknown error occurred",
+      });
     }
   }
 }

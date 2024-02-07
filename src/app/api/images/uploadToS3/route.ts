@@ -28,16 +28,14 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
   //   image = await image.writeAsync(fileName);
   // }
 
+  // Convert image to PNG
+  let image = await Jimp.read(file);
+  if (image.getMIME() !== Jimp.MIME_PNG) {
+    fileName = "/tmp/" + fileName.replace(/\.[^/.]+$/, "") + ".png";
+    image = await image.writeAsync(fileName);
+  }
 
-    // Convert image to PNG
-    let image = await Jimp.read(file);
-    if (image.getMIME() !== Jimp.MIME_PNG) {
-      fileName = "/tmp/" + fileName.replace(/\.[^/.]+$/, "") + ".png";
-      image = await image.writeAsync(fileName);
-    }
-  
-
-  console.log('MADE IT HERE')
+  console.log("MADE IT HERE");
   // Resize image if it's larger than 4 MB
   const maxSize = 4 * 1024 * 1024;
   if (image.bitmap.data.length > maxSize) {
@@ -52,7 +50,11 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
   let height = Math.floor(image.bitmap.height * scaleFactor);
   image = image.resize(width, height);
   // Create a new 1024x1024 white image
-  let transparentImage = new Jimp(1024, 1024, Jimp.rgbaToInt(255, 255, 255, 255));
+  let transparentImage = new Jimp(
+    1024,
+    1024,
+    Jimp.rgbaToInt(255, 255, 255, 255)
+  );
   // Calculate the position to center the image
   let x = (1024 - width) / 2;
   let y = (1024 - height) / 2;
@@ -110,9 +112,15 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     if (error instanceof Error) {
-      return NextResponse.json({ error: error.message });
+      return NextResponse.json({
+        status: 500,
+        error: error.message,
+      });
     } else {
-      return NextResponse.json({ error: "An unknown error occurred" });
+      return NextResponse.json({
+        status: 500,
+        error: "An unknown error occurred",
+      });
     }
   }
 }
