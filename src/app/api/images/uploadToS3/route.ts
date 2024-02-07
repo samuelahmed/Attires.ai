@@ -71,7 +71,11 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
     ContentType: "image/png",
   };
   const command = new PutObjectCommand(params);
-  await s3Client.send(command);
+  try {
+    await s3Client.send(command);
+  } catch (error) {
+    console.error("Failed to send command to S3:", error);
+  }
   const s3URL = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
   return s3URL;
 }
