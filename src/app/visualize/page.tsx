@@ -283,7 +283,7 @@ export default function Visualize() {
             </Button>
           </div>
         </div>
-        <div className="h-[512px] bg-white flex justify-center items-center">
+        <div className="h-[512px] w-3/4 bg-white flex justify-center items-center">
           {isLoading === true && (
             <Loader
               className="h-2/3 w-2/3 animate-spin-slow"
