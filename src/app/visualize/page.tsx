@@ -26,10 +26,11 @@ export default function Visualize() {
   const [seeOriginal, setSeeOriginal] = useState(true);
   const [currentImage, setCurrentImage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [totalUse, setTotalUse] = useState(0);
+  const [totalUse, setTotalUse] = useState<number | undefined>();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { uploading, errorMessage, handleFileChange, handleSubmit } =
     useFileHandler();
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const { toast } = useToast();
   const router = useRouter();
@@ -68,6 +69,7 @@ export default function Visualize() {
     });
     const data = await response.json();
     setImageUrl(data.url);
+    setIsImageLoaded(true);
   };
 
   /* 
@@ -103,6 +105,8 @@ export default function Visualize() {
   Trigger dalle with current image.
 */
   const callDalle = async () => {
+    if (totalUse === undefined) return;
+
     if (
       (isSubscribed === true && totalUse < 100) ||
       (isSubscribed !== true && totalUse < 10)
@@ -122,8 +126,7 @@ export default function Visualize() {
         });
         const data = await response.json();
         setDalleResult(data);
-        setTotalUse((prevCount) => prevCount + 1);
-
+        setTotalUse((prevCount) => (prevCount ? prevCount + 1 : 0));
         // Call the /api/dallePrisma route with the s3URL
         const prismaResponse = await fetch("/api/dallePrisma", {
           method: "POST",
@@ -178,6 +181,8 @@ export default function Visualize() {
   Trigger Stability with current image.
 */
   const callStability = async () => {
+    if (totalUse === undefined) return;
+
     if (
       (isSubscribed === true && totalUse < 100) ||
       (isSubscribed !== true && totalUse < 10)
@@ -197,8 +202,7 @@ export default function Visualize() {
         const stabilityData = await stabilityResponse.json();
         setStabilityData(stabilityData);
 
-        setTotalUse((prevCount) => prevCount + 1);
-
+        setTotalUse((prevCount) => (prevCount ? prevCount + 1 : 0));
         //  Call the /api/stablityPrisma route with the s3URL
         const prismaResponse = await fetch("/api/stabilityPrisma", {
           method: "POST",
@@ -292,14 +296,12 @@ export default function Visualize() {
           </div>
         </div>
         <div className="h-[512px] w-3/4 bg-white flex justify-center items-center">
-          {!imageUrl && (
+          {!imageUrl && isImageLoaded && (
             <div>
               <Popover>
                 <PopoverTrigger className=" items-center w-full" asChild>
                   <Button variant="outline" className="px-2 font-normal">
-                    <span className="text-left block w-full">
-                      Upload Image
-                    </span>
+                    <span className="text-left block w-full">Upload Image</span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
