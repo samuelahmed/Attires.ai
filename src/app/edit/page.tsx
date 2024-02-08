@@ -217,15 +217,35 @@ Get most recent MaskImg that has been uploaded by current user
     };
   };
 
+  // const getPos = (e, can) => {
+  //   let rect = can.getBoundingClientRect();
+  //   if (e.touches) {
+  //     return {
+  //       x: e.touches[0].clientX - rect.left,
+  //       y: e.touches[0].clientY - rect.top,
+  //     };
+  //   }
+  //   return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  // };
+
   const getPos = (e, can) => {
     let rect = can.getBoundingClientRect();
+    let size = 512;
+    if (window.innerWidth < 768) {
+      size = (window.innerWidth * 9) / 10;
+    }
+
+    let scaleFactor = can.width / size; // Calculate the scale factor based on the actual canvas width
     if (e.touches) {
       return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top,
+        x: (e.touches[0].clientX - rect.left) * scaleFactor,
+        y: (e.touches[0].clientY - rect.top) * scaleFactor,
       };
     }
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    return {
+      x: (e.clientX - rect.left) * scaleFactor,
+      y: (e.clientY - rect.top) * scaleFactor,
+    };
   };
 
   // Main setup function
@@ -234,7 +254,9 @@ Get most recent MaskImg that has been uploaded by current user
     if (node && node.parentNode) {
       node.parentNode.removeChild(node);
     }
-    /*
+
+    // /*
+
     // why is this causing issues sometimes?
     // let canvasSize;
     // if (window.innerWidth > 768) {
@@ -242,40 +264,65 @@ Get most recent MaskImg that has been uploaded by current user
     // } else {
     //   canvasSize = (window.innerWidth * 9) / 10;
     // }
-    let can = createCanvas(
-      "PictureLayer",
-      // canvasSize,
-      // canvasSize,
-      width,
-      height,
-      "margin:auto;"
-    );
-    */
 
+    let canvasSize = 1024; // Create the canvas at a larger size
+
+    // let canvasWidth = canvasSize;
     let imgWidth = img.naturalWidth;
     let imgHeight = img.naturalHeight;
+    // let aspectRatio = imgWidth / imgHeight;
     let aspectRatio = imgWidth / imgHeight;
+    let canvasWidth = canvasSize / aspectRatio;
 
-    let canvasSize;
-    if (window.innerWidth > 768) {
-      canvasSize = 512;
-    } else {
-      canvasSize = (window.innerWidth * 9) / 10;
-    }
-
-    let canvasWidth = canvasSize;
     let canvasHeight = canvasSize / aspectRatio;
 
     let can = createCanvas(
       "PictureLayer",
+      // canvasSize,
+      // canvasSize,
+      // width,
+      // height,
       canvasWidth,
       canvasHeight,
       "margin:auto;"
     );
 
+    if (window.innerWidth > 768) {
+      // canvasSize = 512;
+      can.style.width = "512px";
+      can.style.height = `${512 / aspectRatio}px`;
+    } else {
+      let size = (window.innerWidth * 9) / 10;
+      can.style.width = size;
+      can.style.height = `${size / aspectRatio}px`;
+    }
+
+    // can.style.width = "512px";
+    // can.style.height = `${512 / aspectRatio}px`;
+
+    // */
+
+    // let imgWidth = img.naturalWidth;
+    // let imgHeight = img.naturalHeight;
+    // let aspectRatio = imgWidth / imgHeight;
+
+    // let canvasSize;
+
+    // let canvasWidth = canvasSize;
+    // let canvasHeight = canvasSize / aspectRatio;
+
+    // let can = createCanvas(
+    //   "PictureLayer",
+    //   canvasWidth,
+    //   canvasHeight,
+    //   "margin:auto;"
+    // );
+
     const outerCanvas = document.getElementById("outer-canvas");
     outerCanvas.appendChild(can);
     let ctx = can.getContext("2d");
+    // ctx.imageSmoothingEnabled = false;
+
     ctxRef.current = ctx;
     drawImageOnCanvas(ctx, img, x, y, width, height, can);
     ctx.lineCap = "round";
@@ -285,6 +332,8 @@ Get most recent MaskImg that has been uploaded by current user
     // Create a separate canvas for the original image
     let originalCanvas = createCanvas("originalCanvas", can.width, can.height);
     let originalCtx = originalCanvas.getContext("2d");
+    // originalCtx.imageSmoothingEnabled = false;
+
     drawImageOnCanvas(originalCtx, originalImg, x, y, width, height, can);
 
     can.addEventListener("mousedown", (event) => {
@@ -350,24 +399,39 @@ Get most recent MaskImg that has been uploaded by current user
   };
 
   useEffect(() => {
+    let canvasSize = 1024;
+    let size = 512;
+    if (window.innerWidth < 768) {
+      size = (window.innerWidth * 9) / 10;
+    }
+
+    let scaleFactor = size / canvasSize; // Calculate the scale factor
+
+    let scaledSliderValue = sliderValue * scaleFactor; // Scale down the slider value
+
     const cursorCanvas = document.createElement("canvas");
-    cursorCanvas.width = sliderValue;
-    cursorCanvas.height = sliderValue;
+    cursorCanvas.width = scaledSliderValue;
+    cursorCanvas.height = scaledSliderValue;
     const ctx = cursorCanvas.getContext("2d");
     ctx.beginPath();
-    ctx.arc(sliderValue / 2, sliderValue / 2, sliderValue / 2, 0, Math.PI * 2);
+    ctx.arc(
+      scaledSliderValue / 2,
+      scaledSliderValue / 2,
+      scaledSliderValue / 2,
+      0,
+      Math.PI * 2
+    );
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
     ctx.stroke();
     const cursorUrl = cursorCanvas.toDataURL();
     const outerCanvas = document.getElementById("outer-canvas");
     if (outerCanvas) {
-      outerCanvas.style.cursor = `url(${cursorUrl}) ${sliderValue / 2} ${
-        sliderValue / 2
+      outerCanvas.style.cursor = `url(${cursorUrl}) ${scaledSliderValue / 2} ${
+        scaledSliderValue / 2
       }, auto`;
     }
   }, [sliderValue]);
-
   return (
     <>
       <div className="backgroundStyle h-screen w-screen flex flex-col">
