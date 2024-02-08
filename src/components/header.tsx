@@ -23,7 +23,8 @@ import useFileHandler from "@/hooks/useFileHandler";
 
 export default function Header() {
   const router = useRouter();
-  const { uploading, errorMessage, handleFileChange, handleSubmit } = useFileHandler();
+  const { uploading, errorMessage, handleFileChange, handleSubmit } =
+    useFileHandler();
 
   return (
     <>
@@ -50,6 +51,9 @@ export default function Header() {
                 <MenubarItem onClick={() => router.push("/edit")}>
                   Edit
                 </MenubarItem>
+                <MenubarItem onClick={() => router.push("/gallery")}>
+                  Gallery
+                </MenubarItem>
                 <Popover>
                   <PopoverTrigger
                     className="border-none items-center w-full"
@@ -58,7 +62,7 @@ export default function Header() {
                     <Button className="px-2 font-normal h-8" variant="outline">
                       {/* Upload New Image */}
                       <span className="text-left block w-full">
-                        Upload Image
+                        Upload New Image
                       </span>
                     </Button>
                   </PopoverTrigger>
