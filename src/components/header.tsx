@@ -34,9 +34,18 @@ export default function Header() {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!file) {
+    const supportedFileTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/bmp",
+      "image/tiff",
+      "image/gif",
+    ];
+    if (!file || !supportedFileTypes.includes(file.type)) {
+      setErrorMessage("Please upload a JPEG, PNG, BMP, TIFF, or GIF image.");
       return;
     }
+
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
@@ -56,8 +65,9 @@ export default function Header() {
       setUploading(false);
     }
   };
+
   const createMaskImg = async (imgUrl: string) => {
-    console.log("here");
+    // console.log("here");
     try {
       const response = await fetch("/api/images/uploadMaskToS3", {
         method: "POST",
@@ -78,7 +88,6 @@ export default function Header() {
     }
   };
 
-  
   return (
     <>
       <header className="w-screen h-14 px-2 py-2 md:px-10 space-x-2 flex flex-row items-center justify-between">
