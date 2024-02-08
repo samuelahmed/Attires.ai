@@ -283,7 +283,8 @@ export default function Visualize() {
             >
               Create
             </Button>
-            <Button
+            {/* Disable for the time being */}
+            {/* <Button
               onClick={() => {
                 callStability();
               }}
@@ -292,7 +293,7 @@ export default function Visualize() {
               type="submit"
             >
               Random
-            </Button>
+            </Button> */}
           </div>
         </div>
         <div className="h-[512px] w-3/4 bg-white flex justify-center items-center">
