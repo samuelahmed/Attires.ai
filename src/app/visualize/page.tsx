@@ -309,8 +309,17 @@ export default function Visualize() {
             />
           )}
         </div>
+        <div className="flex flex-row content-center items-center space-x-2">
         {isSubscribed === true && <div>{totalUse} / 100</div>}
         {isSubscribed === false && <div>{totalUse} / 10</div>}
+        <Button 
+        variant="outline"
+        size="sm" onClick={() => router.push("/edit")}>
+          Edit  
+        </Button>
+
+        </div>
+
       </main>
     </div>
   );
