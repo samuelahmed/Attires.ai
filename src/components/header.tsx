@@ -58,7 +58,7 @@ export default function Header() {
                     <Button className="px-2 font-normal h-8" variant="outline">
                       {/* Upload New Image */}
                       <span className="text-left block w-full">
-                        Upload New Image
+                        Upload Image
                       </span>
                     </Button>
                   </PopoverTrigger>

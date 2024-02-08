@@ -10,6 +10,12 @@ import { Loader } from "lucide-react";
 import { useToast } from "@/components/ui/useToast";
 import { ToastAction } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
+import useFileHandler from "@/hooks/useFileHandler";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function Visualize() {
   const [imageUrl, setImageUrl] = useState("");
@@ -22,6 +28,8 @@ export default function Visualize() {
   const [isLoading, setIsLoading] = useState(false);
   const [totalUse, setTotalUse] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const { uploading, errorMessage, handleFileChange, handleSubmit } =
+    useFileHandler();
 
   const { toast } = useToast();
   const router = useRouter();
@@ -284,6 +292,40 @@ export default function Visualize() {
           </div>
         </div>
         <div className="h-[512px] w-3/4 bg-white flex justify-center items-center">
+          {!imageUrl && (
+            <div>
+              <Popover>
+                <PopoverTrigger className=" items-center w-full" asChild>
+                  <Button variant="outline" className="px-2 font-normal">
+                    <span className="text-left block w-full">
+                      Upload Image
+                    </span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <form
+                    className="flex flex-col space-y-1 items-center"
+                    onSubmit={handleSubmit}
+                  >
+                    <Input
+                      onChange={handleFileChange}
+                      id="picture"
+                      type="file"
+                    />
+                    <Button
+                      className="w-36 border-2 border-gray-500"
+                      type="submit"
+                    >
+                      {uploading ? "Uploading..." : "Upload"}
+                    </Button>
+                  </form>
+                  {errorMessage && (
+                    <span className="text-red-600 text-xs">{errorMessage}</span>
+                  )}
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
           {isLoading === true && (
             <Loader
               className="h-2/3 w-2/3 animate-spin-slow"
@@ -310,16 +352,16 @@ export default function Visualize() {
           )}
         </div>
         <div className="flex flex-row content-center items-center space-x-2">
-        {isSubscribed === true && <div>{totalUse} / 100</div>}
-        {isSubscribed === false && <div>{totalUse} / 10</div>}
-        <Button 
-        variant="outline"
-        size="sm" onClick={() => router.push("/edit")}>
-          Edit  
-        </Button>
-
+          {isSubscribed === true && <div>{totalUse} / 100</div>}
+          {isSubscribed === false && <div>{totalUse} / 10</div>}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => router.push("/edit")}
+          >
+            Edit
+          </Button>
         </div>
-
       </main>
     </div>
   );
