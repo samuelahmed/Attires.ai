@@ -35,8 +35,9 @@ async function maskImage(imgUrl: string) {
   // @ts-ignore
   const segmenter = await PipelineSingleton.getInstance();
   const output = await segmenter(url);
+  console.log('Before Jimp.read');
   let image = await Jimp.read(url);
-
+  console.log('After Jimp.read');
   /*
     It is important to set the mask on a white image or else the borders (if there is size diff)
     will be transparent and the AI will attempt to fill those areas. 
@@ -85,7 +86,7 @@ async function maskImage(imgUrl: string) {
 
   const processedImageBuffer = await whiteImage.getBufferAsync(Jimp.MIME_PNG);
   const maskKey = `/tmp/-mask-${Date.now()}`;
-  
+
   // const maskKey = `${fileName}-mask-${Date.now()}`;
   const maskParams = {
     Bucket: process.env.AWS_BUCKET_NAME,
@@ -94,12 +95,14 @@ async function maskImage(imgUrl: string) {
     ContentType: "image/png",
   };
   const maskCommand = new PutObjectCommand(maskParams);
+  console.log('Before s3Client.send');
 
   try {
     await s3Client.send(maskCommand);
   } catch (error) {
     console.error("Failed to send command to S3:", error);
   }
+  console.log('After s3Client.send');
   const s3URLMaskImg = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${maskKey}`;
   return s3URLMaskImg;
 }
@@ -136,6 +139,8 @@ export async function POST(request: Request) {
       success: true,
     });
   } catch (error) {
+    console.error('Error in POST function:', error);
+
     if (error instanceof Error) {
       return NextResponse.json({
         error: error.message,
