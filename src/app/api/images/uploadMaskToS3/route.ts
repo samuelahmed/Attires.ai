@@ -8,6 +8,8 @@ import PipelineSingleton from "./pipeline.js";
 import fetch from "node-fetch";
 
 export const maxDuration = 100;
+export const fetchCache = "force-no-store";
+// export const runtime = 'edge';
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
@@ -34,8 +36,8 @@ async function maskImage(imgUrl: string) {
   // const pathName = decodeURIComponent(destructureUrl.pathname);
   // const fileName = pathName.split("/").pop() || "";
   // @ts-ignore
-  // const segmenter = await PipelineSingleton.getInstance();
-  // const output = await segmenter(url);
+  const segmenter = await PipelineSingleton.getInstance();
+  const output = await segmenter(url);
 
   console.log("Before fetching image data");
   const response = await fetch(url);
@@ -57,38 +59,38 @@ async function maskImage(imgUrl: string) {
   let y = (1024 - height) / 2;
   whiteImage = whiteImage.composite(image, x, y);
 
-  // interface Segment {
-  //   label: string;
-  //   mask: {
-  //     height: number;
-  //     width: number;
-  //     data: number[];
-  //   };
-  // }
+  interface Segment {
+    label: string;
+    mask: {
+      height: number;
+      width: number;
+      data: number[];
+    };
+  }
 
-  // const labels = [
-  //   "Upper-clothes",
-  //   "Pants",
-  //   "Left-shoe",
-  //   "Right-shoe",
-  //   "Left-arm",
-  //   "Right-arm",
-  //   "Left-leg",
-  //   "Right-leg",
-  // ];
+  const labels = [
+    "Upper-clothes",
+    "Pants",
+    "Left-shoe",
+    "Right-shoe",
+    "Left-arm",
+    "Right-arm",
+    "Left-leg",
+    "Right-leg",
+  ];
 
-  // const masks = output
-  //   .filter((segment: Segment) => labels.includes(segment.label))
-  //   .map((segment: Segment) => segment.mask);
-  // for (let mask of masks) {
-  //   for (let y = 0; y < mask.height; y++) {
-  //     for (let x = 0; x < mask.width; x++) {
-  //       if (mask.data[y * mask.width + x]) {
-  //         whiteImage.setPixelColor(Jimp.rgbaToInt(0, 0, 0, 0), x, y);
-  //       }
-  //     }
-  //   }
-  // }
+  const masks = output
+    .filter((segment: Segment) => labels.includes(segment.label))
+    .map((segment: Segment) => segment.mask);
+  for (let mask of masks) {
+    for (let y = 0; y < mask.height; y++) {
+      for (let x = 0; x < mask.width; x++) {
+        if (mask.data[y * mask.width + x]) {
+          whiteImage.setPixelColor(Jimp.rgbaToInt(0, 0, 0, 0), x, y);
+        }
+      }
+    }
+  }
 
   const processedImageBuffer = await whiteImage.getBufferAsync(Jimp.MIME_PNG);
   const maskKey = `-mask-${Date.now()}`;
