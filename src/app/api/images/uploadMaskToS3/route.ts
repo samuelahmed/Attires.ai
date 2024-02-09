@@ -5,6 +5,8 @@ import Jimp from "jimp";
 import { auth, currentUser } from "@clerk/nextjs";
 // @ts-ignore
 import PipelineSingleton from "./pipeline.js";
+import fetch from 'node-fetch';
+
 
 export const maxDuration = 100;
 
@@ -35,8 +37,14 @@ async function maskImage(imgUrl: string) {
   // @ts-ignore
   const segmenter = await PipelineSingleton.getInstance();
   const output = await segmenter(url);
+
+  console.log('Before fetching image data');
+const response = await fetch(url);
+const buffer = await response.buffer();
+
+
   console.log('Before Jimp.read');
-  let image = await Jimp.read(url);
+  let image = await Jimp.read(buffer);
   console.log('After Jimp.read');
   /*
     It is important to set the mask on a white image or else the borders (if there is size diff)
