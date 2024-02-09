@@ -84,8 +84,8 @@ async function maskImage(imgUrl: string) {
   }
 
   const processedImageBuffer = await whiteImage.getBufferAsync(Jimp.MIME_PNG);
-  const maskKey = `-mask-${Date.now()}`;
-
+  const maskKey = `/tmp/-mask-${Date.now()}`;
+  
   // const maskKey = `${fileName}-mask-${Date.now()}`;
   const maskParams = {
     Bucket: process.env.AWS_BUCKET_NAME,
