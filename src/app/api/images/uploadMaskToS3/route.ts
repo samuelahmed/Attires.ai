@@ -35,35 +35,38 @@ async function maskImage(imgUrl: string) {
   const url = destructureUrl.href;
   // const pathName = decodeURIComponent(destructureUrl.pathname);
   // const fileName = pathName.split("/").pop() || "";
-  console.log('Before getting segmenter instance');
+
+
+
+  // console.log('Before getting segmenter instance');
     // @ts-ignore
   const segmenter = await PipelineSingleton.getInstance();
-  console.log('After getting segmenter instance');  
+  // console.log('After getting segmenter instance');  
   
-  console.log('Before segmenter call');
+  // console.log('Before segmenter call');
   const output = await segmenter(url);
-  console.log('After segmenter call');
+  // console.log('After segmenter call');
   
   // const output = await segmenter(url);
 
-  console.log("Before fetching image data");
+  // console.log("Before fetching image data");
 
   // const response = await fetch(url);
-  console.log('Before fetch call');
-const response = await fetch(url);
-console.log('After fetch call');
+  // console.log('Before fetch call');
+// const response = await fetch(url);
+// console.log('After fetch call');
 
 
 
   // const buffer = await response.buffer();
-  console.log('Before response.buffer call');
-const buffer = await response.buffer();
-console.log('After response.buffer call');
+  // console.log('Before response.buffer call');
+// const buffer = await response.buffer();
+// console.log('After response.buffer call');
 
 
-  console.log("Before Jimp.read");
-  let image = await Jimp.read(buffer);
-  console.log("After Jimp.read");
+  // console.log("Before Jimp.read");
+  let image = await Jimp.read(url);
+  // console.log("After Jimp.read");
   /*
     It is important to set the mask on a white image or else the borders (if there is size diff)
     will be transparent and the AI will attempt to fill those areas. 
@@ -121,13 +124,13 @@ console.log('After response.buffer call');
     ContentType: "image/png",
   };
   const maskCommand = new PutObjectCommand(maskParams);
-  console.log("Before s3Client.send");
+  // console.log("Before s3Client.send");
   try {
     await s3Client.send(maskCommand);
   } catch (error) {
     console.error("Failed to send command to S3:", error);
   }
-  console.log("After s3Client.send");
+  // console.log("After s3Client.send");
   const s3URLMaskImg = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${maskKey}`;
   return s3URLMaskImg;
 }
