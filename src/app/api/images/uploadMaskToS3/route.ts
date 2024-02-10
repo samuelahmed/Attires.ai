@@ -8,7 +8,7 @@ import PipelineSingleton from "./pipeline.js";
 import fetch from "node-fetch";
 
 export const maxDuration = 100;
-export const fetchCache = "force-no-store";
+// export const fetchCache = "force-no-store";
 // export const runtime = 'edge';
 
 const s3Client = new S3Client({
@@ -35,13 +35,31 @@ async function maskImage(imgUrl: string) {
   const url = destructureUrl.href;
   // const pathName = decodeURIComponent(destructureUrl.pathname);
   // const fileName = pathName.split("/").pop() || "";
-  // @ts-ignore
+  console.log('Before getting segmenter instance');
+    // @ts-ignore
   const segmenter = await PipelineSingleton.getInstance();
+  console.log('After getting segmenter instance');  
+  
+  console.log('Before segmenter call');
   const output = await segmenter(url);
+  console.log('After segmenter call');
+  
+  // const output = await segmenter(url);
 
   console.log("Before fetching image data");
-  const response = await fetch(url);
-  const buffer = await response.buffer();
+
+  // const response = await fetch(url);
+  console.log('Before fetch call');
+const response = await fetch(url);
+console.log('After fetch call');
+
+
+
+  // const buffer = await response.buffer();
+  console.log('Before response.buffer call');
+const buffer = await response.buffer();
+console.log('After response.buffer call');
+
 
   console.log("Before Jimp.read");
   let image = await Jimp.read(buffer);
@@ -104,7 +122,6 @@ async function maskImage(imgUrl: string) {
   };
   const maskCommand = new PutObjectCommand(maskParams);
   console.log("Before s3Client.send");
-
   try {
     await s3Client.send(maskCommand);
   } catch (error) {
