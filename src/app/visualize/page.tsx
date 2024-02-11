@@ -304,12 +304,12 @@ export default function Visualize() {
                   Upload an image of yourself to get started
                 </p>
                 <p className="text-sm font-normal">
-                  The AI works best with headshots but can also generate complete
+                  The AI works best with headshots but can also design complete
                   outfits.
                 </p>
                 <p className="text-sm font-normal">
                   Click Edit to see and adjust the area that
-                  the AI will fill.
+                  the AI will generate.
                 </p>
               </div>
               <Popover>
