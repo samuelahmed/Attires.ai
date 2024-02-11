@@ -296,11 +296,24 @@ export default function Visualize() {
             </Button> */}
           </div>
         </div>
-        <div className="h-[512px] w-3/4 bg-white flex justify-center items-center">
+        <div className="h-[512px] w-3/4 bg-white flex justify-center items-center ">
           {!imageUrl && isImageLoaded && (
-            <div>
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <div className="w-full font-bold space-y-2">
+                <p className="text-xl text-center">
+                  Upload an image of yourself to get started
+                </p>
+                <p className="text-sm font-normal">
+                  The AI works best with headshots but can also generate complete
+                  outfits.
+                </p>
+                <p className="text-sm font-normal">
+                  Click Edit to see and adjust the area that
+                  the AI will fill.
+                </p>
+              </div>
               <Popover>
-                <PopoverTrigger className=" items-center w-full" asChild>
+                <PopoverTrigger className=" items-center w-1/4" asChild>
                   <Button variant="outline" className="px-2 font-normal">
                     <span className="text-left block w-full">Upload Image</span>
                   </Button>
