@@ -177,82 +177,6 @@ export default function Visualize() {
     }
   };
 
-  /* 
-  Trigger Stability with current image.
-*/
-  const callStability = async () => {
-    if (totalUse === undefined) return;
-
-    if (
-      (isSubscribed === true && totalUse < 100) ||
-      (isSubscribed !== true && totalUse < 10)
-    ) {
-      setIsLoading(true);
-      setSeeOriginal(false);
-      try {
-        const stabilityResponse = await fetch("/api/stability", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            imgURL: maskImage,
-          }),
-        });
-        const stabilityData = await stabilityResponse.json();
-        setStabilityData(stabilityData);
-
-        setTotalUse((prevCount) => (prevCount ? prevCount + 1 : 0));
-        //  Call the /api/stablityPrisma route with the s3URL
-        const prismaResponse = await fetch("/api/stabilityPrisma", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            file: stabilityData,
-          }),
-        });
-      } catch (error) {
-      } finally {
-        setIsLoading(false);
-      }
-    } else if (isSubscribed === true && totalUse >= 100) {
-      toast({
-        title: "You've used your 100 monthly images",
-        description: "Contact us if you would like to increase your limit.",
-        variant: "destructive",
-        action: (
-          <ToastAction
-            onClick={() => {
-              router.push("/subscription");
-            }}
-            altText="Try again"
-          >
-            Subscribe
-          </ToastAction>
-        ),
-      });
-      // alert("out of use - max 100");
-    } else if (isSubscribed !== true && totalUse >= 10) {
-      toast({
-        title: "You've ran out of free images",
-        description: "Subscribe for 100 monthly images.",
-        variant: "destructive",
-        action: (
-          <ToastAction
-            onClick={() => {
-              router.push("/subscription");
-            }}
-            altText="Try again"
-          >
-            Subscribe
-          </ToastAction>
-        ),
-      });
-    }
-  };
-
   return (
     <div className="backgroundStyle h-screen w-screen flex flex-col">
       <Header />
@@ -283,17 +207,6 @@ export default function Visualize() {
             >
               Create
             </Button>
-            {/* Disable for the time being */}
-            {/* <Button
-              onClick={() => {
-                callStability();
-              }}
-              disabled={isLoading}
-              id="Activate Visualizer AI"
-              type="submit"
-            >
-              Random
-            </Button> */}
           </div>
         </div>
         <div className="h-[512px] w-3/4 bg-white flex justify-center items-center ">
@@ -308,8 +221,8 @@ export default function Visualize() {
                   outfits.
                 </p>
                 <p className="text-sm font-normal">
-                  Click Edit to see and adjust the area that
-                  the AI will generate.
+                  Click Edit to see and adjust the area that the AI will
+                  generate.
                 </p>
               </div>
               <Popover>
