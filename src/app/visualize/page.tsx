@@ -22,7 +22,6 @@ export default function Visualize() {
   const [maskImage, setMaskImage] = useState("");
   const [clientContent, setClientContent] = useState("describe outfit");
   const [dalleResult, setDalleResult] = useState();
-  const [stabilityData, setStabilityData] = useState({ image: "" });
   const [seeOriginal, setSeeOriginal] = useState(true);
   const [currentImage, setCurrentImage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -45,12 +44,6 @@ export default function Visualize() {
     getTotalUseage();
     getSubscription();
   }, []);
-
-  useEffect(() => {
-    if (stabilityData.image) {
-      setCurrentImage(stabilityData.image);
-    }
-  }, [stabilityData]);
 
   useEffect(() => {
     // @ts-ignore
