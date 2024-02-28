@@ -219,14 +219,14 @@ export default function Visualize() {
                 </p>
               </div>
               <Popover>
-                <PopoverTrigger className=" items-center w-1/4" asChild>
+                <PopoverTrigger className=" items-center w-fit" asChild>
                   <Button variant="outline" className="px-2 font-normal">
                     <span className="text-left block w-full">Upload Image</span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
                   <form
-                    className="flex flex-col space-y-1 items-center"
+                    className="flex flex-col space-y-1 items-center m-0"
                     onSubmit={handleSubmit}
                   >
                     <Input
