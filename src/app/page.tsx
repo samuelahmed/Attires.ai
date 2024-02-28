@@ -63,7 +63,7 @@ export default function Home() {
             </div>
           </PageHeader>
         </div>
-        <div className="flex flex-col md:flex-row w-full items-center justify-around space-x-4 space-y-4 md:space-y-0 my-16">
+        <div className="flex flex-col md:flex-row w-full items-center justify-around md:space-x-4 space-y-4 md:space-y-0 my-16">
           <div>
             <p className="text-center font-semibold">1. Upload your Image</p>
             <video
