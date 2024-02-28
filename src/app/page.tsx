@@ -63,11 +63,12 @@ export default function Home() {
             </div>
           </PageHeader>
         </div>
-        <div className="flex flex-col md:flex-row w-full items-center justify-around space-y-4 md:space-y-0 my-8">
+        <div className="flex flex-col md:flex-row w-full items-center justify-around space-x-4 space-y-4 md:space-y-0 my-16">
           <div>
             <p className="text-center font-semibold">1. Upload your Image</p>
             <video
               className="shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]"
+              style={{ minHeight: "438px" }}
               loop
               ref={videoRef1}
               width="320"
@@ -84,6 +85,7 @@ export default function Home() {
             </p>
             <video
               className="shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]"
+              style={{ minHeight: "438px" }}
               loop
               ref={videoRef2}
               width="320"
@@ -98,6 +100,7 @@ export default function Home() {
             <p className="text-center font-semibold">3. Perfect the mask</p>
             <video
               className="shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]"
+              style={{ minHeight: "438px" }}
               loop
               ref={videoRef3}
               width="320"
