@@ -20,7 +20,7 @@ import {
 export default function Visualize() {
   const [imageUrl, setImageUrl] = useState("");
   const [maskImage, setMaskImage] = useState("");
-  const [clientContent, setClientContent] = useState("describe outfit");
+  const [clientContent, setClientContent] = useState("");
   const [dalleResult, setDalleResult] = useState();
   const [seeOriginal, setSeeOriginal] = useState(true);
   const [currentImage, setCurrentImage] = useState("");
@@ -175,6 +175,24 @@ export default function Visualize() {
       <Header />
       <main className="flex flex-col flex-grow items-center space-y-10 mt-10">
         <div className="w-4/5 md:w-1/2 flex flex-col space-y-2 ">
+          <div className="flex flex-row space-x-2">
+            <Input
+              value={clientContent}
+              onChange={(e) => setClientContent(e.target.value)}
+              type="email"
+              placeholder="Describe outfit"
+            />
+            <Button
+              onClick={() => {
+                callDalle();
+              }}
+              disabled={isLoading || clientContent.length === 0}
+              id="Activate Visualizer AI"
+              type="submit"
+            >
+              Create
+            </Button>
+          </div>
           <div className="flex flex-row space-x-2 text-sm items-center pl-1">
             <p>Original Image</p>
             <Switch
@@ -182,24 +200,6 @@ export default function Visualize() {
               onCheckedChange={toggleSeeOriginal}
               aria-label="Toggle Original Image"
             />
-          </div>
-          <div className="flex flex-row space-x-2">
-            <Input
-              value={clientContent}
-              onChange={(e) => setClientContent(e.target.value)}
-              type="email"
-              placeholder="Tell the AI what to design"
-            />
-            <Button
-              onClick={() => {
-                callDalle();
-              }}
-              disabled={isLoading}
-              id="Activate Visualizer AI"
-              type="submit"
-            >
-              Create
-            </Button>
           </div>
         </div>
         <div className="h-[512px] w-3/4 bg-white flex justify-center items-center ">
