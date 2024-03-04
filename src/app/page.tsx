@@ -71,7 +71,7 @@ export default function Home() {
               style={{ minHeight: "438px" }}
               loop
               playsInline
-              poster="/vid1Preview.png"
+              poster="/vid1WhitePlay.png"
               ref={videoRef1}
               width="320"
               height="240"
@@ -90,7 +90,7 @@ export default function Home() {
               style={{ minHeight: "438px" }}
               loop
               playsInline
-              poster="/vid2Preview.png"
+              poster="/vid2WhitePlay.png"
               ref={videoRef2}
               width="320"
               height="240"
@@ -107,7 +107,7 @@ export default function Home() {
               style={{ minHeight: "438px" }}
               loop
               playsInline
-              poster="/vid3Preview.png"
+              poster="/vid3WhitePlay.png"
               ref={videoRef3}
               width="320"
               height="240"
