@@ -43,7 +43,7 @@ export default function Header() {
         <div className="flex flex-row items-center space-x-2">
           <Menubar>
             <MenubarMenu>
-              <MenubarTrigger>Image</MenubarTrigger>
+              <MenubarTrigger>Menu</MenubarTrigger>
               <MenubarContent className="mr-5 md:mr-8 space-y-1">
                 <MenubarItem onClick={() => router.push("/visualize")}>
                   Visualize
@@ -62,7 +62,7 @@ export default function Header() {
                     <Button className="px-2 font-normal h-8" variant="outline">
                       {/* Upload New Image */}
                       <span className="text-left block w-full">
-                        Upload New Image
+                        Upload Image
                       </span>
                     </Button>
                   </PopoverTrigger>
