@@ -64,7 +64,6 @@ export async function POST(request: Request) {
 
   try {
     const { input, imgURL } = await request.json();
-    console.log('IMG URL', imgURL)
     const s3URL = await uploadResultToS3(imgURL, input);
 
     return new Response(JSON.stringify({ image: s3URL }), { status: 200 });

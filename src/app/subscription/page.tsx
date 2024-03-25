@@ -23,7 +23,6 @@ export default function Payments() {
       cache: "no-store",
     });
     const data = await response.json();
-    console.log(data.currentPeriodUse);
     setUseage(data.currentPeriodUse);
   };
 
@@ -40,7 +39,6 @@ export default function Payments() {
     getSubscription();
   }, []);
 
-  console.log(isSubscribed, "IS subscribed");
 
   return (
     <div className="backgroundStyle h-screen w-screen flex flex-col">

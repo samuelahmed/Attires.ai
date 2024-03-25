@@ -17,7 +17,6 @@ export async function POST(request: Request) {
 
   try {
     const { file: s3URL } = await request.json();
-    console.log("s3URL:", s3URL);
     if (!s3URL) {
       console.log("No file");
       return new NextResponse("No file");
