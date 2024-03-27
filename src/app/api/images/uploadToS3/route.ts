@@ -15,37 +15,23 @@ const s3Client = new S3Client({
 });
 
 async function uploadFileToS3(file: Buffer, fileName: string) {
-
-
-  // Convert image to PNG
-  // Is this causing an issue with jpegs?
+  // Read the file info
   let image = await Jimp.read(file);
 
-  // Rename files
-  fileName = Date.now() + ".png"
+  // Rename file with png file extension
+  fileName = Date.now() + ".png";
 
-  if (image.getMIME() !== Jimp.MIME_PNG) {
-    // fileName = "/tmp/" + fileName.replace(/\.[^/.]+$/, "") + ".png";
-    fileName = Date.now() + ".png"
-    // console.log(fileName)
-    // image = await image.writeAsync(fileName);
-  }
-
-  // Resize image if it's larger than 4 MB
+  // Resize image if size is over 4mb
   const maxSize = 4 * 1024 * 1024;
   if (image.bitmap.data.length > maxSize) {
-    const scaleFactor = Math.sqrt(maxSize / image.bitmap.data.length);
-    const width = Math.floor(image.bitmap.width * scaleFactor);
-    const height = Math.floor(image.bitmap.height * scaleFactor);
-    image = image.resize(width, height);
+    const width = 1024;
+    const height = 1024;
+    image = image.scaleToFit(width, height);
   }
 
-  // Resize image to fit within 1024x1024
-  const scaleFactor = 1024 / Math.max(image.bitmap.width, image.bitmap.height);
-  let width = Math.floor(image.bitmap.width * scaleFactor);
-  let height = Math.floor(image.bitmap.height * scaleFactor);
-  image = image.resize(width, height);
-
+  // Resize image to fit within 1024x1024 canvas with white bg
+  let width = Math.floor(image.bitmap.width);
+  let height = Math.floor(image.bitmap.height);
 
   // Create a new 1024x1024 white image
   let transparentImage = new Jimp(
@@ -54,20 +40,19 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
     Jimp.rgbaToInt(255, 255, 255, 255)
   );
 
-  // Calculate the position to center the image
+  // Find Center
   let x = (1024 - width) / 2;
   let y = (1024 - height) / 2;
 
-  // Composite the original image onto the white image
-  transparentImage = transparentImage.composite(image, x, y);
+  // Set original image on the white bg 1024x1024
+  transparentImage.composite(image, x, y);
 
+  // Place final png image in a buffer
+  const processedImageBuffer = await transparentImage.getBufferAsync(
+    Jimp.MIME_PNG
+  );
 
-  // Now use transparentImage instead of image
-  image = transparentImage;
-  const processedImageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
-
-
-  // const key = `${fileName}-${Date.now()}`;
+  // Upload image buffer to S3
   const key = fileName;
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
@@ -75,12 +60,7 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
     Body: processedImageBuffer,
     ContentType: "image/png",
   };
-
-
   const command = new PutObjectCommand(params);
-
-
-
   try {
     await s3Client.send(command);
   } catch (error) {
@@ -90,23 +70,15 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
   return s3URL;
 }
 
-
-
 export async function POST(request: Request) {
-  /*
-  Check current user and get ID
-  */
+  // Check user authentication status
   const { userId } = auth();
   const user = await currentUser();
   if (!userId || !user) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  /*
-  Take file from form data and put into buffer
-  Call uploadFileToS3() with the buffer and get the s3 URL
-  Create db entry with s3 URL, userId, and type Upload
-  */
+  // Pass s3 URL to database
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
@@ -115,7 +87,7 @@ export async function POST(request: Request) {
     }
     const buffer = Buffer.from(await file.arrayBuffer());
     const s3URL = await uploadFileToS3(buffer, file.name);
-    const newEntry = await prismadb.image.create({
+    await prismadb.image.create({
       data: {
         userId: userId,
         type: "Upload",
@@ -126,11 +98,6 @@ export async function POST(request: Request) {
       s3URL,
       success: true,
     });
-
-
-
-
-
 
   } catch (error) {
     if (error instanceof Error) {
