@@ -47,16 +47,18 @@ const useFileHandler = () => {
       method: "POST",
       body: formData,
     });
+
     if (response.ok) {
       const data = await response.json();
-      await createMaskImg(data.s3URL);
+      console.log(data)
+      // await createMaskImg(data.s3URL);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file || !SUPPORTED_FILE_TYPES.includes(file.type)) {
-      setErrorMessage("Please upload a JPEG, PNG, BMP, TIFF, or GIF image.");
+      setErrorMessage("Please upload a JPEG,  PNG, BMP, TIFF, or GIF image.");
       return;
     }
     setUploading(true);

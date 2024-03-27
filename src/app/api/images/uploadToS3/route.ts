@@ -4,6 +4,10 @@ import prismadb from "@/lib/prismadb";
 import Jimp from "jimp";
 import { auth, currentUser } from "@clerk/nextjs";
 
+
+const sharp = require('sharp');
+
+
 export const maxDuration = 100;
 
 const s3Client = new S3Client({
@@ -15,8 +19,13 @@ const s3Client = new S3Client({
 });
 
 async function uploadFileToS3(file: Buffer, fileName: string) {
+
+
   // Read the file info
+  // console.log(file.byteLength)
   let image = await Jimp.read(file);
+
+  console.log('STARTED PROCESSS')
 
   // Rename file with png file extension
   fileName = Date.now() + ".png";
@@ -24,6 +33,7 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
   // Resize image if size is over 4mb
   const maxSize = 4 * 1024 * 1024;
   if (image.bitmap.data.length > maxSize) {
+    console.log('HERE')
     const width = 1024;
     const height = 1024;
     image = image.scaleToFit(width, height);
