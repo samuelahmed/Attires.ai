@@ -15,11 +15,20 @@ const s3Client = new S3Client({
 });
 
 async function uploadFileToS3(file: Buffer, fileName: string) {
+
+
   // Convert image to PNG
+  // Is this causing an issue with jpegs?
   let image = await Jimp.read(file);
+
+  // Rename files
+  fileName = Date.now() + ".png"
+
   if (image.getMIME() !== Jimp.MIME_PNG) {
-    fileName = "/tmp/" + fileName.replace(/\.[^/.]+$/, "") + ".png";
-    image = await image.writeAsync(fileName);
+    // fileName = "/tmp/" + fileName.replace(/\.[^/.]+$/, "") + ".png";
+    fileName = Date.now() + ".png"
+    // console.log(fileName)
+    // image = await image.writeAsync(fileName);
   }
 
   // Resize image if it's larger than 4 MB
@@ -30,33 +39,48 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
     const height = Math.floor(image.bitmap.height * scaleFactor);
     image = image.resize(width, height);
   }
+
   // Resize image to fit within 1024x1024
   const scaleFactor = 1024 / Math.max(image.bitmap.width, image.bitmap.height);
   let width = Math.floor(image.bitmap.width * scaleFactor);
   let height = Math.floor(image.bitmap.height * scaleFactor);
   image = image.resize(width, height);
+
+
   // Create a new 1024x1024 white image
   let transparentImage = new Jimp(
     1024,
     1024,
     Jimp.rgbaToInt(255, 255, 255, 255)
   );
+
   // Calculate the position to center the image
   let x = (1024 - width) / 2;
   let y = (1024 - height) / 2;
+
   // Composite the original image onto the white image
   transparentImage = transparentImage.composite(image, x, y);
+
+
   // Now use transparentImage instead of image
   image = transparentImage;
   const processedImageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
-  const key = `${fileName}-${Date.now()}`;
+
+
+  // const key = `${fileName}-${Date.now()}`;
+  const key = fileName;
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: key,
     Body: processedImageBuffer,
     ContentType: "image/png",
   };
+
+
   const command = new PutObjectCommand(params);
+
+
+
   try {
     await s3Client.send(command);
   } catch (error) {
@@ -65,6 +89,8 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
   const s3URL = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
   return s3URL;
 }
+
+
 
 export async function POST(request: Request) {
   /*
@@ -100,6 +126,12 @@ export async function POST(request: Request) {
       s3URL,
       success: true,
     });
+
+
+
+
+
+
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({
